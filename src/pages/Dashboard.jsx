@@ -6,7 +6,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import '../App.css';
 import { FiTrendingDown, FiTrendingUp, FiChevronDown } from 'react-icons/fi';
 
-const Dashboard = () => {
+
+
+const Dashboard = ({ darkMode }) => {
     const [showAllTransactions, setShowAllTransactions] = useState(false);
     const maxVisibleTransactions = 6;
     const [transactionFilter, setTransactionFilter] = useState('all'); // 'all', 'income', 'expense'
@@ -101,9 +103,11 @@ const Dashboard = () => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
-                <div className="bg-white p-3 shadow-md rounded-md border border-gray-200">
+                <div className={`${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-200 text-black'} p-3 shadow-md rounded-md border`}>
                     <p className="font-semibold text-sm" style={{ color: data.color }}>{data.name}</p>
-                    <p className="text-gray-800 text-sm">Amount: <span className='font-bold tracking-tight'>Rp.{data.value.toLocaleString()}</span></p>
+                    <p className={`${darkMode ? 'text-gray-200' : 'text-gray-800'} text-sm`}>
+                        Amount: <span className='font-bold tracking-tight'>Rp.{data.value.toLocaleString()}</span>
+                    </p>
                 </div>
             );
         }
@@ -120,7 +124,7 @@ const Dashboard = () => {
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-black font-medium text-sm">
+                        <span className={`${darkMode ? 'text-white' : 'text-black'} font-medium text-sm`}>
                             {entry.value}
                         </span>
                     </li>
@@ -141,47 +145,48 @@ const Dashboard = () => {
 
     return (
         <div className="w-full h-screen p-3">
-            <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+            <h1 className={`text-2xl font-bold mb-6 text-center md:text-start ${darkMode ? 'text-white' : 'text-black'}`}>Dashboard</h1>
 
             {/* Full width cards section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-                <div className="bg-white flex items-center gap-3 p-4 rounded-xl shadow">
+                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} flex items-center gap-3 p-4 rounded-xl shadow transition-colors duration-200`}>
                     <div className='bg-purple-500 p-3 rounded-full text-white shadow-lg'>
                         <BiWallet size={20} />
                     </div>
                     <div className='flex justify-center flex-col'>
-                        <p className="text-xs font-semibold text-gray-500">Total Saldo</p>
-                        <p className="text-black font-semibold">Rp.{totalSaldo.toLocaleString()}</p>
+                        <p className={`text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>Total Saldo</p>
+                        <p className={`${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Rp.{totalSaldo.toLocaleString()}</p>
                     </div>
                 </div>
 
-                <div className="bg-white flex items-center gap-3 p-4 rounded-xl shadow">
+                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} flex items-center gap-3 p-4 rounded-xl shadow transition-colors duration-200`}>
                     <div className='bg-orange-500 p-3 rounded-full text-white shadow-lg'>
                         <LuWalletMinimal size={20} />
                     </div>
                     <div className='flex justify-center flex-col'>
-                        <p className="text-xs font-semibold text-gray-500">Total Pemasukan</p>
-                        <p className="text-black font-semibold">Rp.{totalPemasukan.toLocaleString()}</p>
+                        <p className={`text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>Total Pemasukan</p>
+                        <p className={`${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Rp.{totalPemasukan.toLocaleString()}</p>
                     </div>
                 </div>
 
-                <div className="bg-white flex items-center gap-3 p-4 rounded-xl shadow">
+                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} flex items-center gap-3 p-4 rounded-xl shadow transition-colors duration-200`}>
                     <div className='bg-red-500 p-3 rounded-full text-white shadow-lg'>
-                        <GrMoney size={20} />
+                        <GrMoney size={20} className={darkMode ? "text-white" : ""} />
                     </div>
                     <div className='flex justify-center flex-col'>
-                        <p className="text-xs font-semibold text-gray-500">Total Pengeluaran</p>
-                        <p className="text-black font-semibold">Rp.{totalPengeluaran.toLocaleString()}</p>
+                        <p className={`text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>Total Pengeluaran</p>
+                        <p className={`${darkMode ? 'text-white' : 'text-black'} font-semibold`}>Rp.{totalPengeluaran.toLocaleString()}</p>
                     </div>
                 </div>
             </div>
 
             <div className="flex flex-col lg:flex-row w-full gap-5 h-[calc(100%-200px)]">
                 <div className="w-full lg:w-[60%]">
-                    <div className="bg-white w-full h-full p-5 rounded-xl shadow">
-                        <h2 className="text-lg font-semibold mb-3">Statistik Keuangan</h2>
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} w-full h-full p-5 rounded-xl shadow transition-colors duration-200`}>
+                        <h2 className={`text-lg font-semibold mb-3 ${darkMode ? 'text-white' : 'text-black'}`}>Statistik Keuangan</h2>
                         <div className="w-full h-[calc(100%-40px)] flex items-center justify-center">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height={300}>
+
                                 <PieChart>
                                     <Pie
                                         data={chartData}
@@ -198,10 +203,11 @@ const Dashboard = () => {
                                     </Pie>
                                     <text
                                         x="50%"
-                                        y="45%"
+                                        y="40%"
                                         textAnchor="middle"
                                         dominantBaseline="middle"
-                                        className="text-gray-500 text-sm font-medium"
+                                        className={`${darkMode ? 'text-gray-300' : 'text-gray-500'} text-sm font-medium`}
+                                        fill={darkMode ? "#D1D5DB" : "#6B7280"}
                                     >
                                         Total Saldo
                                     </text>
@@ -211,6 +217,7 @@ const Dashboard = () => {
                                         textAnchor="middle"
                                         dominantBaseline="middle"
                                         className="text-xl font-bold"
+                                        fill={darkMode ? "#FFFFFF" : "#000000"}
                                     >
                                         Rp{totalSaldo.toLocaleString()}
                                     </text>
@@ -228,15 +235,15 @@ const Dashboard = () => {
                 </div>
 
                 <div className="w-full lg:w-[40%]">
-                    <div className="bg-white w-full h-full p-5 rounded-xl shadow overflow-hidden">
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} w-full h-full p-5 rounded-xl shadow overflow-hidden transition-colors duration-200`}>
                         <div className="flex justify-between items-center mb-3">
-                            <h2 className="text-lg font-semibold">Transaksi Terbaru</h2>
+                            <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>Transaksi Terbaru</h2>
 
                             {/* Dropdown filter */}
                             <div className="relative">
                                 <button
                                     onClick={toggleFilterDropdown}
-                                    className="flex items-center gap-1 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+                                    className={`flex items-center gap-1 text-sm font-medium ${darkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-700 bg-gray-100 hover:bg-gray-200'} px-3 py-1.5 rounded-lg transition-colors`}
                                 >
                                     {getFilterLabel()}
                                     <FiChevronDown size={14} className={`transition-transform ${showFilterDropdown ? 'rotate-180' : ''}`} />
@@ -244,22 +251,22 @@ const Dashboard = () => {
 
                                 {/* Dropdown menu */}
                                 {showFilterDropdown && (
-                                    <div className="absolute right-0 mt-1 w-40 bg-white shadow-lg rounded-lg py-1 z-10 border border-gray-100">
+                                    <div className={`absolute right-0 mt-1 w-40 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-100'} shadow-lg rounded-lg py-1 z-10 border`}>
                                         <button
                                             onClick={() => setFilter('all')}
-                                            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                            className={`w-full text-left px-3 py-2 text-sm ${darkMode ? 'hover:bg-gray-600 text-white' : 'hover:bg-gray-100 text-gray-700'} transition-colors`}
                                         >
                                             Semua
                                         </button>
                                         <button
                                             onClick={() => setFilter('income')}
-                                            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                            className={`w-full text-left px-3 py-2 text-sm ${darkMode ? 'hover:bg-gray-600 text-white' : 'hover:bg-gray-100 text-gray-700'} transition-colors`}
                                         >
                                             Pemasukan
                                         </button>
                                         <button
                                             onClick={() => setFilter('expense')}
-                                            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                            className={`w-full text-left px-3 py-2 text-sm ${darkMode ? 'hover:bg-gray-600 text-white' : 'hover:bg-gray-100 text-gray-700'} transition-colors`}
                                         >
                                             Pengeluaran
                                         </button>
@@ -271,18 +278,21 @@ const Dashboard = () => {
                         <div className={`${showAllTransactions ? 'custom-scrollbar overflow-y-auto h-[calc(100%-80px)]' : 'overflow-hidden'}`}>
                             {filteredTransactions.length > 0 ? (
                                 displayedTransactions.map((item) => (
-                                    <div key={item.id} className="border-b border-gray-100 py-3">
+                                    <div key={item.id} className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-100'} py-3`}>
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-3">
-                                                <div className={`px-1.5 py-1 rounded-full bg-gray-100`}>
+                                                <div className={`px-1.5 py-1 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                                                     <span className="text-lg">{item.emoji}</span>
                                                 </div>
                                                 <div className="flex flex-col gap-1">
-                                                    <p className="text-sm font-medium">{item.name}</p>
-                                                    <p className="text-xs font-semibold text-gray-400">{formatDate(item.date)}</p>
+                                                    <p className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>{item.name}</p>
+                                                    <p className={`text-xs font-semibold ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{formatDate(item.date)}</p>
                                                 </div>
                                             </div>
-                                            <div className={` flex justify-center items-center gap-2 text-xs font-semibold p-2 rounded-lg ${item.type === 'income' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
+                                            <div className={`flex justify-center items-center gap-2 text-xs font-semibold p-2 rounded-lg ${item.type === 'income'
+                                                ? (darkMode ? 'text-green-300 bg-green-900' : 'text-green-600 bg-green-100')
+                                                : (darkMode ? 'text-red-300 bg-red-900' : 'text-red-600 bg-red-100')
+                                                }`}>
                                                 {item.formattedAmount}
                                                 {item.type === 'income' ? <FiTrendingUp size={16} /> : <FiTrendingDown size={16} />}
                                             </div>
@@ -290,7 +300,7 @@ const Dashboard = () => {
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-center py-8 text-gray-500">
+                                <div className={`text-center py-8 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     {transactionFilter === 'all' ? 'Belum ada transaksi' :
                                         transactionFilter === 'income' ? 'Belum ada pemasukan' : 'Belum ada pengeluaran'}
                                 </div>
@@ -301,7 +311,10 @@ const Dashboard = () => {
                         {filteredTransactions.length > maxVisibleTransactions && (
                             <button
                                 onClick={toggleTransactions}
-                                className="mt-3 text-purple-600 hover:text-purple-800 font-medium text-sm w-full py-2 text-center border border-purple-200 rounded-lg hover:bg-purple-50 transition-colors"
+                                className={`mt-3 ${darkMode
+                                    ? 'text-purple-400 hover:text-purple-300 border-purple-700 hover:bg-purple-900'
+                                    : 'text-purple-600 hover:text-purple-800 border-purple-200 hover:bg-purple-50'
+                                    } font-medium text-sm w-full py-2 text-center border rounded-lg transition-colors`}
                             >
                                 {showAllTransactions ? 'Lihat Lebih Sedikit' : 'Lihat Semua'}
                             </button>
