@@ -3,8 +3,7 @@ import '../App.css';
 import CardsTotal from '../components/dahboard/CardsTotal';
 import StatistikTotal from '../components/dahboard/StatistikTotal';
 import RecentTransaction from '../components/dahboard/RecentTransaction';
-
-
+import MonthlyBalanceChart from '../components/dahboard/MonthlyBalanceCart';
 
 const Dashboard = ({ darkMode }) => {
     const [showAllTransactions, setShowAllTransactions] = useState(false);
@@ -81,7 +80,7 @@ const Dashboard = ({ darkMode }) => {
     };
 
     return (
-        <div className="w-full h-screen p-3">
+        <div className="w-full h-screen p-3 overflow-y-auto">
             <h1 className={`text-2xl font-bold mb-6 text-center md:text-start ${darkMode ? 'text-white' : 'text-black'}`}>Dashboard</h1>
 
             <CardsTotal
@@ -91,8 +90,9 @@ const Dashboard = ({ darkMode }) => {
                 totalPengeluaran={totalPengeluaran}
             />
 
-            <div className="flex flex-col lg:flex-row w-full gap-5 h-[calc(100%-200px)]">
 
+
+            <div className="flex flex-col lg:flex-row w-full gap-5">
                 <StatistikTotal
                     darkMode={darkMode}
                     totalSaldo={totalSaldo}
@@ -113,6 +113,9 @@ const Dashboard = ({ darkMode }) => {
                     setFilter={setFilter}
                     getFilterLabel={getFilterLabel}
                 />
+            </div>
+            <div className="w-full mb-5">
+                <MonthlyBalanceChart darkMode={darkMode} />
             </div>
         </div>
     );
