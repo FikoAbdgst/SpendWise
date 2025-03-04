@@ -112,7 +112,7 @@ const RecentTransaction = ({
                       <p
                         className={`text-sm font-medium ${darkMode ? "text-white" : "text-gray-800"}`}
                       >
-                        {item.name}
+                        {item.type === "income" ? item.source : item.category}
                       </p>
                       <p
                         className={`text-xs font-semibold ${
