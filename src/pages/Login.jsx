@@ -56,7 +56,7 @@ const Login = ({ setIsLoggedIn, setUsername }) => {
       setUsername(data.user.full_name || data.user.email);
 
       // Redirect ke halaman utama
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setError(err.message || "Terjadi kesalahan saat login");
     } finally {

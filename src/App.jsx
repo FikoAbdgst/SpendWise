@@ -13,17 +13,31 @@ function App() {
   const [username, setUsername] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loginStatus = localStorage.getItem("isLogin") === "true";
-    const currentUser = localStorage.getItem("currentUser");
+    // Check for token instead of isLogin flag
+    const token = localStorage.getItem("token");
+    const userDataString = localStorage.getItem("user");
     const isDarkMode = localStorage.getItem("isDarkMode") === "true";
 
-    setIsLoggedIn(loginStatus);
-    setDarkMode(isDarkMode);
-    if (currentUser) {
-      setUsername(currentUser);
+    if (token && userDataString) {
+      try {
+        const userData = JSON.parse(userDataString);
+        setIsLoggedIn(true);
+        setUsername(userData.full_name || userData.email);
+      } catch (error) {
+        // If JSON parsing fails, clear invalid data
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setIsLoggedIn(false);
+      }
+    } else {
+      setIsLoggedIn(false);
     }
+
+    setDarkMode(isDarkMode);
+    setIsLoading(false);
   }, []);
 
   // Update document body class when dark mode changes
@@ -41,7 +55,18 @@ function App() {
     localStorage.setItem("isDarkMode", newDarkMode.toString());
   };
 
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUsername("");
+  };
+
   const ProtectedRoute = ({ element }) => {
+    if (isLoading) {
+      return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    }
     return isLoggedIn ? element : <Navigate to="/login" />;
   };
 
@@ -63,13 +88,17 @@ function App() {
     };
   }, [isMobileMenuOpen]);
 
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
   return (
     <Router>
       <div className={`flex h-screen overflow-hidden ${darkMode ? "dark" : ""}`}>
         {/* Sidebar for desktop */}
         {isLoggedIn && (
           <div className="hidden md:block md:w-64 h-full sidebar-container">
-            <Sidebar username={username} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />
+            <Sidebar username={username} setIsLoggedIn={handleLogout} darkMode={darkMode} />
           </div>
         )}
 
@@ -80,7 +109,7 @@ function App() {
               isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <Sidebar username={username} setIsLoggedIn={setIsLoggedIn} darkMode={darkMode} />
+            <Sidebar username={username} setIsLoggedIn={handleLogout} darkMode={darkMode} />
           </div>
         )}
 
@@ -145,7 +174,7 @@ function App() {
               />
 
               <Route
-                path="/dashboard"
+                path="/"
                 element={<ProtectedRoute element={<Dashboard darkMode={darkMode} />} />}
               />
               <Route
