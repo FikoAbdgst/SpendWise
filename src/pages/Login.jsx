@@ -18,6 +18,9 @@ const Login = ({ setIsLoggedIn, setUsername }) => {
       [name]: value,
     });
   };
+  const API_URL = process.env.NODE_ENV === 'production'
+    ? 'https://backend-spendwise.vercel.app/'
+    : 'http://localhost:3000';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +36,7 @@ const Login = ({ setIsLoggedIn, setUsername }) => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

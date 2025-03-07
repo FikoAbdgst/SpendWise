@@ -22,6 +22,10 @@ const Register = () => {
     });
   };
 
+  const API_URL = process.env.NODE_ENV === 'production'
+    ? 'https://backend-spendwise.vercel.app/'
+    : 'http://localhost:3000';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { full_name, email, password, confirmPassword } = formData;
@@ -41,7 +45,7 @@ const Register = () => {
       setLoading(true);
       setError("");
 
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
