@@ -18,11 +18,15 @@ const Dashboard = ({ darkMode }) => {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [monthlyData, setMonthlyData] = useState({});
 
+  const apiUrl = process.env.NODE_ENV === 'production'
+    ? 'https://backend-spendwise.vercel.app/'
+    : 'http://localhost:3000';
+
   useEffect(() => {
     const fetchMonthlyBalance = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/api/balance/monthly-balance", {
+        const response = await fetch(`${apiUrl}/api/balance/monthly-balance`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,7 +52,7 @@ const Dashboard = ({ darkMode }) => {
     const fetchFinancialSummary = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/api/balance/summary", {
+        const response = await fetch(`${apiUrl}/api/balance/summary`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -76,7 +80,7 @@ const Dashboard = ({ darkMode }) => {
     const fetchRecentTransactions = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/api/balance/recent-transactions?limit=5", {
+        const response = await fetch(`${apiUrl} / api / balance / recent - transactions ? limit = 5`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -148,9 +152,8 @@ const Dashboard = ({ darkMode }) => {
   return (
     <div className="w-full h-screen p-3 overflow-y-auto">
       <h1
-        className={`text-2xl font-bold mb-6 text-center md:text-start ${
-          darkMode ? "text-white" : "text-black"
-        }`}
+        className={`text-2xl font-bold mb-6 text-center md:text-start ${darkMode ? "text-white" : "text-black"
+          }`}
       >
         Dashboard
       </h1>

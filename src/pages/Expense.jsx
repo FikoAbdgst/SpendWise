@@ -15,7 +15,9 @@ const Expense = ({ darkMode }) => {
     const [expenseAmount, setExpenseAmount] = useState('');
     const [expenseDate, setExpenseDate] = useState('');
 
-    const API_URL = 'http://localhost:3000/api';
+    const API_URL = process.env.NODE_ENV === 'production'
+        ? 'https://backend-spendwise.vercel.app/'
+        : 'http://localhost:3000';
 
     // Fetch transactions from API
     const fetchExpenses = async () => {
