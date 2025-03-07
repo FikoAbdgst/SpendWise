@@ -19,7 +19,7 @@ const Dashboard = ({ darkMode }) => {
   const [monthlyData, setMonthlyData] = useState({});
 
   const apiUrl = process.env.NODE_ENV === 'production'
-    ? 'https://backend-spendwise.vercel.app/'
+    ? 'https://backend-spendwise.vercel.app'
     : 'http://localhost:3000';
 
   useEffect(() => {

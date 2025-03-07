@@ -16,7 +16,7 @@ const Income = ({ darkMode }) => {
     const [incomeDate, setIncomeDate] = useState('');
 
     const API_URL = process.env.NODE_ENV === 'production'
-        ? 'https://backend-spendwise.vercel.app/'
+        ? 'https://backend-spendwise.vercel.app'
         : 'http://localhost:3000';
 
 

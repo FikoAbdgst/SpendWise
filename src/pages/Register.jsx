@@ -23,7 +23,7 @@ const Register = () => {
   };
 
   const API_URL = process.env.NODE_ENV === 'production'
-    ? 'https://backend-spendwise.vercel.app/'
+    ? 'https://backend-spendwise.vercel.app'
     : 'http://localhost:3000';
 
   const handleSubmit = async (e) => {
