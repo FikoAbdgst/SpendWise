@@ -3,6 +3,13 @@ import { BiWallet } from "react-icons/bi";
 import { GrMoney } from "react-icons/gr";
 import { LuWalletMinimal } from "react-icons/lu";
 
+const formatRupiah = (amount) => {
+  return `Rp.${amount.toLocaleString("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })}`;
+};
+
 const CardsTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
@@ -19,7 +26,7 @@ const CardsTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) 
             Sisa Saldo
           </p>
           <p className={`${darkMode ? "text-white" : "text-black"} font-semibold`}>
-            Rp.{totalSaldo.toLocaleString()}
+            {formatRupiah(totalSaldo)}
           </p>
         </div>
       </div>
@@ -37,7 +44,7 @@ const CardsTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) 
             Total Pemasukan
           </p>
           <p className={`${darkMode ? "text-white" : "text-black"} font-semibold`}>
-            Rp.{totalPemasukan.toLocaleString()}
+            {formatRupiah(totalPemasukan)}
           </p>
         </div>
       </div>
@@ -55,7 +62,7 @@ const CardsTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) 
             Total Pengeluaran
           </p>
           <p className={`${darkMode ? "text-white" : "text-black"} font-semibold`}>
-            Rp.{totalPengeluaran.toLocaleString()}
+            {formatRupiah(totalPengeluaran)}
           </p>
         </div>
       </div>
