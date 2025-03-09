@@ -1,298 +1,668 @@
-import React, { useState, useEffect } from 'react';
-import EmojiPicker from 'emoji-picker-react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FaPlus, FaSave, FaTimes, FaTrash, FaEdit, FaSearch } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import IconSelector from "../components/IconSelector";
 
 const Expense = ({ darkMode }) => {
-    const [isOpenModalAddExpense, setIsOpenModalAddExpense] = useState(false);
-    const [selectedEmoji, setSelectedEmoji] = useState(null);
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [expenses, setExpenses] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  // States untuk form dan data
+  const [showForm, setShowForm] = useState(false);
+  const [expenses, setExpenses] = useState([]);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState("💰");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [showIconSelector, setShowIconSelector] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [sortColumn, setSortColumn] = useState("date");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
-    // Form state
-    const [expenseName, setExpenseName] = useState('');
-    const [expenseAmount, setExpenseAmount] = useState('');
-    const [expenseDate, setExpenseDate] = useState('');
+  // Form state
+  const [formData, setFormData] = useState({
+    category: "",
+    amount: "",
+    date: new Date(),
+    icon: "💰",
+  });
 
-    const API_URL = process.env.NODE_ENV === 'production'
-        ? 'https://backend-spendwise.vercel.app'
-        : 'http://localhost:3000';
+  // API URL
+  const apiUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://backend-spendwise.vercel.app"
+      : "http://localhost:3000";
 
-    // Fetch transactions from API
-    const fetchExpenses = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_URL}/balance/recent-transactions`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                params: {
-                    limit: 50 // Adjust as needed
-                }
-            });
+  // Fetch expenses on component mount
+  useEffect(() => {
+    fetchExpenses();
+  }, [currentPage, sortColumn, sortDirection]);
 
-            // Filter transactions to only include expenses
-            const expenseTransactions = response.data.data.filter(
-                transaction => transaction.type === 'expense'
-            );
+  // Filter expenses when search query changes
+  useEffect(() => {
+    filterExpenses();
+  }, [searchQuery, expenses]);
 
-            setExpenses(expenseTransactions);
-        } catch (err) {
-            console.error('Error fetching expenses:', err);
-            setError('Failed to load expense data. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
+  // Menghitung total pemasukan
+  useEffect(() => {
+    const total = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+    setTotalAmount(total);
+  }, [filteredExpenses]);
 
-    // Load existing expenses from API on mount
-    useEffect(() => {
-        fetchExpenses();
-    }, []);
+  // Fetch expenses from API
+  const fetchExpenses = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token); // Cek apakah token ada
 
-    const handleModalAddExpense = () => {
-        setIsOpenModalAddExpense(!isOpenModalAddExpense);
-        if (!isOpenModalAddExpense) {
-            resetForm();
-        }
-    };
+      const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
+      console.log("Fetching URL:", url); // Cek apakah URL sudah benar
 
-    const handleEmojiSelect = (emojiData) => {
-        setSelectedEmoji(emojiData);
-        setShowEmojiPicker(false);
-    };
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const toggleEmojiPicker = () => {
-        setShowEmojiPicker(!showEmojiPicker);
-    };
+      const result = await response.json();
+      console.log("API Response:", result); // Cek respons dari backend
 
-    const closeEmojiPicker = () => {
-        setShowEmojiPicker(false);
-    };
+      // Ubah bagian ini
+      if (result.success) {
+        // Dari console log terlihat response.data langsung berupa array
+        setExpenses(result.data || []);
+        setTotalPages(Math.ceil(result.count / itemsPerPage));
+      } else {
+        setError(result.message || "Failed to fetch expenses");
+      }
+    } catch (error) {
+      setError("Error fetching expenses. Please try again.");
+      console.error("Error fetching expenses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const resetForm = () => {
-        setExpenseName('');
-        setExpenseAmount('');
-        setExpenseDate('');
-        setSelectedEmoji(null);
-    };
+  // Filter expenses based on search query
+  const filterExpenses = () => {
+    if (!searchQuery.trim()) {
+      setFilteredExpenses(expenses);
+      return;
+    }
 
-    const handleSubmit = async () => {
-        if (!expenseName || !expenseAmount || !expenseDate || !selectedEmoji) {
-            alert('Please fill all fields and select an icon');
-            return;
-        }
-
-        try {
-            setLoading(true);
-            const token = localStorage.getItem('token');
-
-            // Create transaction with API
-            await axios.post(
-                `${API_URL}/balance/transaction`,
-                {
-                    type: 'expense',
-                    name: expenseName,
-                    amount: parseFloat(expenseAmount),
-                    date: expenseDate,
-                    icon: selectedEmoji.emoji
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            // Refresh the expenses list
-            fetchExpenses();
-
-            // Close modal and reset form
-            setIsOpenModalAddExpense(false);
-            resetForm();
-        } catch (err) {
-            console.error('Error adding expense:', err);
-            alert(err.response?.data?.message || 'Failed to add expense. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString();
-    };
-
-    return (
-        <div className={`p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-            <h1 className="text-2xl font-bold mb-4">Expense</h1>
-
-            {/* Error message if API request fails */}
-            {error && (
-                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-                    {error}
-                </div>
-            )}
-
-            {/* Loading indicator */}
-            {loading && !isOpenModalAddExpense && (
-                <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto"></div>
-                </div>
-            )}
-
-            {!loading && expenses.length > 0 ? (
-                <div className="mb-6">
-                    <div className={`rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                        {expenses.map((expense) => (
-                            <div key={expense.id} className={`p-4 flex items-center justify-between ${darkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-                                <div className="flex items-center">
-                                    <span className="text-2xl mr-3">{expense.icon}</span>
-                                    <div>
-                                        <h3 className="font-medium">{expense.name}</h3>
-                                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                            {formatDate(expense.date)}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="font-semibold text-red-600">
-                                    -${expense.amount.toLocaleString()}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ) : !loading && (
-                <div className={`text-center py-8 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    No expense entries yet
-                </div>
-            )}
-
-            <button
-                onClick={handleModalAddExpense}
-                className={`cursor-pointer px-3 py-2 rounded-lg shadow-md mt-2 text-red-500 ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'}`}
-                disabled={loading}
-            >
-                + Add Expense
-            </button>
-
-            {isOpenModalAddExpense && (
-                <>
-                    <div
-                        className='fixed inset-0 bg-black opacity-50 z-40'
-                        onClick={handleModalAddExpense}
-                    ></div>
-                    <div className='fixed inset-0 flex justify-center items-center z-50 pointer-events-none'>
-                        <div className={`p-5 rounded-lg w-96 max-w-full pointer-events-auto py-10 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
-                            <div className='relative'>
-                                <h1 className='text-2xl font-semibold mb-5'>Add Expense</h1>
-                                <button onClick={handleModalAddExpense} className='absolute top-0 right-0 cursor-pointer'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div className='mb-3'>
-                                <p className={`text-sm mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Choose Icon</p>
-                                <div className='flex items-center'>
-                                    <button
-                                        onClick={toggleEmojiPicker}
-                                        className={`flex items-center justify-center border p-2 rounded-lg mr-2 w-12 h-12 ${darkMode ? 'border-gray-600' : 'border-gray-200'
-                                            }`}
-                                    >
-                                        {selectedEmoji ? (
-                                            <span className='text-2xl'>{selectedEmoji.emoji}</span>
-                                        ) : (
-                                            <span className={darkMode ? 'text-gray-500' : 'text-gray-400'}>+</span>
-                                        )}
-                                    </button>
-                                    <div className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                        {selectedEmoji ? 'Emoji selected' : 'Pick Emoji'}
-                                    </div>
-                                </div>
-
-                                {showEmojiPicker && (
-                                    <div className={`mt-2 border rounded-lg z-50 relative ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-white'
-                                        }`}>
-                                        <EmojiPicker
-                                            onEmojiClick={handleEmojiSelect}
-                                            searchPlaceholder="Search emoji..."
-                                            width="100%"
-                                            height="350px"
-                                            theme={darkMode ? 'dark' : 'light'}
-                                        />
-                                        <button
-                                            onClick={closeEmojiPicker}
-                                            className={`absolute -top-3 -right-2 border p-1 rounded-full cursor-pointer ${darkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'
-                                                }`}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${darkMode ? 'text-gray-300' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            <input
-                                type='text'
-                                placeholder='Expense name'
-                                className={`w-full border p-2 rounded-lg mb-3 ${darkMode
-                                    ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
-                                    : 'border-gray-200 bg-white text-black placeholder-gray-500'
-                                    }`}
-                                value={expenseName}
-                                onChange={(e) => setExpenseName(e.target.value)}
-                            />
-
-                            <input
-                                type='number'
-                                placeholder='Expense amount'
-                                className={`w-full border p-2 rounded-lg mb-3 ${darkMode
-                                    ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'
-                                    : 'border-gray-200 bg-white text-black placeholder-gray-500'
-                                    }`}
-                                value={expenseAmount}
-                                onChange={(e) => setExpenseAmount(e.target.value)}
-                            />
-
-                            <input
-                                type='date'
-                                placeholder='Expense date'
-                                className={`w-full border p-2 rounded-lg mb-3 ${darkMode
-                                    ? 'border-gray-600 bg-gray-700 text-white'
-                                    : 'border-gray-200 bg-white text-black'
-                                    }`}
-                                value={expenseDate}
-                                onChange={(e) => setExpenseDate(e.target.value)}
-                            />
-
-                            {loading ? (
-                                <button
-                                    className='bg-red-400 text-white px-3 py-2 rounded-lg w-full flex justify-center'
-                                    disabled
-                                >
-                                    <div className="animate-spin h-5 w-5 border-b-2 border-white rounded-full mr-2"></div>
-                                    Processing...
-                                </button>
-                            ) : (
-                                <button
-                                    className='bg-red-500 text-white px-3 py-2 rounded-lg w-full hover:bg-red-600 transition'
-                                    onClick={handleSubmit}
-                                >
-                                    Add Expense
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </>
-            )}
-        </div>
+    const query = searchQuery.toLowerCase();
+    const filtered = expenses.filter(
+      (expense) =>
+        expense.category.toLowerCase().includes(query) || expense.amount.toString().includes(query)
     );
+
+    setFilteredExpenses(filtered);
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // Handle date change
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, date });
+  };
+
+  // Handle icon selection
+  const handleIconSelect = (icon) => {
+    setSelectedIcon(icon);
+    setFormData({ ...formData, icon });
+    setShowIconSelector(false);
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const url = editMode ? `${apiUrl}/api/expenses/${editId}` : `${apiUrl}/api/expenses`;
+
+      const formattedDate =
+        formData.date instanceof Date
+          ? formData.date.toISOString().split("T")[0]
+          : new Date(formData.date).toISOString().split("T")[0];
+
+      console.log("Data yang akan dikirim:", {
+        category: formData.category,
+        amount: parseFloat(formData.amount),
+        date: formattedDate,
+        icon: formData.icon,
+      });
+
+      const response = await fetch(url, {
+        method: editMode ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          category: formData.category,
+          amount: parseFloat(formData.amount),
+          date: formattedDate,
+          icon: formData.icon,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("Response dari server:", result);
+
+      if (result.success) {
+        setNotification({
+          show: true,
+          message: editMode ? "Pemasukan berhasil diperbarui!" : "Pemasukan berhasil ditambahkan!",
+          type: "success",
+        });
+
+        resetForm();
+        fetchExpenses();
+      } else {
+        setError(result.message || "Failed to save expense");
+        setNotification({
+          show: true,
+          message: `Gagal menyimpan pemasukan: ${result.message}`,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setError("Error saving expense. Please try again.");
+      console.error("Error saving expense:", error);
+      setNotification({
+        show: true,
+        message: "Terjadi kesalahan. Silakan coba lagi.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setFormData({
+      category: "",
+      amount: "",
+      date: new Date(),
+      icon: "💰",
+    });
+    setSelectedIcon("💰");
+    setShowForm(false);
+    setEditMode(false);
+    setEditId(null);
+  };
+
+  // Handle edit expense
+  const handleEdit = (expense) => {
+    setFormData({
+      category: expense.category,
+      amount: expense.amount,
+      date: new Date(expense.date),
+      icon: expense.icon || "💰",
+    });
+    setSelectedIcon(expense.icon || "💰");
+    setEditMode(true);
+    setEditId(expense.id);
+    setShowForm(true);
+  };
+
+  // Handle delete expense
+  const handleDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/api/expenses/${deleteId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Tampilkan notifikasi sukses
+        setNotification({
+          show: true,
+          message: "Pemasukan berhasil dihapus!",
+          type: "success",
+        });
+
+        // Refresh data
+        fetchExpenses();
+      } else {
+        setError(result.message || "Failed to delete expense");
+        setNotification({
+          show: true,
+          message: "Gagal menghapus pemasukan.",
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setError("Error deleting expense. Please try again.");
+      console.error("Error deleting expense:", error);
+      setNotification({
+        show: true,
+        message: "Terjadi kesalahan. Silakan coba lagi.",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+      setShowConfirmDelete(false);
+      setDeleteId(null);
+    }
+  };
+
+  // Format date to readable string
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // Format amount to currency
+  const formatCurrency = (amount) => {
+    return `Rp${Math.round(amount).toLocaleString("id-ID")}`;
+  };
+
+  // Handle sort change
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // Toggle sort direction if clicking on the same column
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // Set new sort column and default to ascending
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
+  // Hide notification after timeout
+  useEffect(() => {
+    if (notification.show) {
+      const timer = setTimeout(() => {
+        setNotification({ ...notification, show: false });
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  return (
+    <div className={`w-full min-h-screen p-3 ${darkMode ? "text-white" : "text-gray-800"}`}>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold mb-4 md:mb-0">Kelola Pemasukan</h1>
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          {/* Search Bar */}
+          <div className={`relative rounded-md ${darkMode ? "bg-gray-700" : "bg-white"}`}>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Cari pemasukan..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
+                darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
+              }`}
+            />
+          </div>
+
+          {/* Add expense Button */}
+          <button
+            onClick={() => setShowForm(true)}
+            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+              darkMode
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+          >
+            <FaPlus />
+            <span>Tambah Pemasukan</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Notification */}
+      {notification.show && (
+        <div
+          className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${
+            notification.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+          }`}
+        >
+          {notification.message}
+        </div>
+      )}
+
+      {/* expense Form Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
+          <div
+            className={`w-full max-w-2xl rounded-lg shadow-lg p-6 ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            }`}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">
+                {editMode ? "Edit Pemasukan" : "Tambah Pemasukan Baru"}
+              </h2>
+              <button
+                onClick={resetForm}
+                className={`p-2 rounded-full hover:bg-opacity-10 ${
+                  darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
+                }`}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                {/* Icon Selector */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Icon</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowIconSelector(!showIconSelector)}
+                    className={`w-full flex items-center justify-between px-4 py-2 rounded-md ${
+                      darkMode
+                        ? "bg-gray-700 hover:bg-gray-600"
+                        : "bg-white border border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    <span className="text-2xl">{selectedIcon}</span>
+                    <span>Pilih Icon</span>
+                  </button>
+                  {showIconSelector && (
+                    <div className="mt-2">
+                      <IconSelector onSelectIcon={handleIconSelect} darkMode={darkMode} />
+                    </div>
+                  )}
+                </div>
+
+                {/* category Input */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Sumber Pengeluaran</label>
+                  <input
+                    type="text"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    required
+                    className={`w-full px-4 py-2 rounded-md ${
+                      darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-gray-800 border border-gray-300"
+                    }`}
+                    placeholder="Gaji, Bonus, dll"
+                  />
+                </div>
+
+                {/* Amount Input */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Jumlah (Rp)</label>
+                  <input
+                    type="number"
+                    name="amount"
+                    value={formData.amount}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    className={`w-full px-4 py-2 rounded-md ${
+                      darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-gray-800 border border-gray-300"
+                    }`}
+                    placeholder="100000"
+                  />
+                </div>
+
+                {/* Date Picker */}
+                <div>
+                  <label className="block text-sm font-medium mb-1">Tanggal</label>
+                  <DatePicker
+                    selected={formData.date}
+                    onChange={handleDateChange}
+                    dateFormat="dd/MM/yyyy"
+                    className={`w-full px-4 py-2 rounded-md ${
+                      darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-gray-800 border border-gray-300"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className={`px-4 py-2 rounded-md ${
+                    darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+                    darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
+                  } text-white`}
+                >
+                  {loading ? (
+                    "Menyimpan..."
+                  ) : (
+                    <>
+                      <FaSave />
+                      <span>Simpan</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showConfirmDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
+          <div
+            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            }`}
+          >
+            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <p className="mb-6">Apakah Anda yakin ingin menghapus pemasukan ini?</p>
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowConfirmDelete(false)}
+                className={`px-4 py-2 rounded-md ${
+                  darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={loading}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                {loading ? "Menghapus..." : "Hapus"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Total Amount */}
+      <div className={`mb-4 p-4 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Total Pemasukan:</h2>
+          <p className="text-xl font-bold text-green-500">{formatCurrency(totalAmount)}</p>
+        </div>
+      </div>
+
+      {/* expense Table */}
+      <div className={`rounded-lg shadow-md overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+        {loading && expenses.length === 0 ? (
+          <div className="p-6 text-center">
+            <p>Memuat data pemasukan...</p>
+          </div>
+        ) : error ? (
+          <div className="p-6 text-center text-red-500">
+            <p>{error}</p>
+          </div>
+        ) : filteredExpenses.length === 0 ? (
+          <div className="p-6 text-center">
+            <p>Belum ada data pemasukan.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className={darkMode ? "bg-gray-700" : "bg-gray-50"}>
+                <tr>
+                  <th
+                    className="px-4 py-3 text-left cursor-pointer"
+                    onClick={() => handleSort("date")}
+                  >
+                    <div className="flex items-center">
+                      <span>Tanggal</span>
+                      {sortColumn === "date" && (
+                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      )}
+                    </div>
+                  </th>
+                  <th
+                    className="px-4 py-3 text-left cursor-pointer"
+                    onClick={() => handleSort("category")}
+                  >
+                    <div className="flex items-center">
+                      <span>Sumber</span>
+                      {sortColumn === "category" && (
+                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      )}
+                    </div>
+                  </th>
+                  <th
+                    className="px-4 py-3 text-right cursor-pointer"
+                    onClick={() => handleSort("amount")}
+                  >
+                    <div className="flex items-center justify-end">
+                      <span>Jumlah</span>
+                      {sortColumn === "amount" && (
+                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      )}
+                    </div>
+                  </th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredExpenses.map((expense) => (
+                  <tr
+                    key={expense.id}
+                    className={darkMode ? "border-t border-gray-700" : "border-t border-gray-200"}
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center">
+                        <span className="text-xl mr-2">{expense.icon || "💰"}</span>
+                        <span>{formatDate(expense.date)}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div>
+                        <p className="font-medium">{expense.category}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right text-green-500 font-medium">
+                      {formatCurrency(expense.amount)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-center gap-2">
+                        <button
+                          onClick={() => handleEdit(expense)}
+                          className={`p-2 rounded-full ${
+                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                          }`}
+                          title="Edit"
+                        >
+                          <FaEdit className={darkMode ? "text-blue-400" : "text-blue-500"} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDeleteId(expense.id);
+                            setShowConfirmDelete(true);
+                          }}
+                          className={`p-2 rounded-full ${
+                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                          }`}
+                          title="Hapus"
+                        >
+                          <FaTrash className={darkMode ? "text-red-400" : "text-red-500"} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
+            <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
+              Halaman {currentPage} dari {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+              >
+                Sebelumnya
+              </button>
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+              >
+                Selanjutnya
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Expense;
