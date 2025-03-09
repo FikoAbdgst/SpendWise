@@ -20,7 +20,6 @@ const Dashboard = ({ darkMode }) => {
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
 
-  // Fungsi untuk mendapatkan data 6 bulan terakhir
   const getLast6MonthsData = () => {
     const data = [];
     const today = new Date();
@@ -69,7 +68,6 @@ const Dashboard = ({ darkMode }) => {
             setFilteredTransactions(formattedTransactions);
           }
 
-          // Tambahan: Fetch monthly data
           const monthlyResponse = await fetch(`${apiUrl}/api/transactions/monthly`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -78,7 +76,6 @@ const Dashboard = ({ darkMode }) => {
           if (monthlyResult.success) {
             setMonthlyData(monthlyResult.data);
           } else {
-            // Jika tidak ada endpoint untuk data bulanan, gunakan data dummy
             setMonthlyData(getLast6MonthsData());
           }
         } else {
@@ -86,7 +83,6 @@ const Dashboard = ({ darkMode }) => {
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        // Jika terjadi error, gunakan data dummy untuk monthly data
         setMonthlyData(getLast6MonthsData());
       }
     };
