@@ -337,7 +337,7 @@ const Expense = ({ darkMode }) => {
               </h2>
               <button
                 onClick={resetForm}
-                className={`p-2 rounded-full hover:bg-opacity-10 ${
+                className={`p-2 rounded-full cursor-pointer hover:bg-opacity-10 ${
                   darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
                 }`}
               >
@@ -352,7 +352,7 @@ const Expense = ({ darkMode }) => {
                   <button
                     type="button"
                     onClick={() => setShowIconSelector(!showIconSelector)}
-                    className={`w-full flex items-center justify-between px-4 py-2 rounded-md ${
+                    className={`w-full cursor-pointer flex items-center justify-between px-4 py-2 rounded-md ${
                       darkMode
                         ? "bg-gray-700 hover:bg-gray-600"
                         : "bg-white border border-gray-300 hover:bg-gray-100"
@@ -381,7 +381,7 @@ const Expense = ({ darkMode }) => {
                         ? "bg-gray-700 text-white"
                         : "bg-white text-gray-800 border border-gray-300"
                     }`}
-                    placeholder="Gaji, Bonus, dll"
+                    placeholder="Belanja, Transportasi, dll"
                   />
                 </div>
 
@@ -399,7 +399,7 @@ const Expense = ({ darkMode }) => {
                         ? "bg-gray-700 text-white"
                         : "bg-white text-gray-800 border border-gray-300"
                     }`}
-                    placeholder="100000"
+                    placeholder="contoh: 100000"
                   />
                 </div>
 
@@ -563,7 +563,7 @@ const Expense = ({ darkMode }) => {
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() => handleEdit(expense)}
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full cursor-pointer ${
                             darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
                           }`}
                           title="Edit"
@@ -575,7 +575,7 @@ const Expense = ({ darkMode }) => {
                             setDeleteId(expense.id);
                             setShowConfirmDelete(true);
                           }}
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full cursor-pointer ${
                             darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
                           }`}
                           title="Hapus"

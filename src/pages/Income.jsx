@@ -5,7 +5,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import IconSelector from "../components/IconSelector";
 
 const Income = ({ darkMode }) => {
-  // States untuk form dan data
   const [showForm, setShowForm] = useState(false);
   const [incomes, setIncomes] = useState([]);
   const [filteredIncomes, setFilteredIncomes] = useState([]);
@@ -303,7 +302,7 @@ const Income = ({ darkMode }) => {
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${
               darkMode
                 ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-blue-500 text-white hover:bg-blue-600"
@@ -338,7 +337,7 @@ const Income = ({ darkMode }) => {
               </h2>
               <button
                 onClick={resetForm}
-                className={`p-2 rounded-full hover:bg-opacity-10 ${
+                className={`p-2 rounded-full cursor-pointer hover:bg-opacity-10 ${
                   darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
                 }`}
               >
@@ -353,7 +352,7 @@ const Income = ({ darkMode }) => {
                   <button
                     type="button"
                     onClick={() => setShowIconSelector(!showIconSelector)}
-                    className={`w-full flex items-center justify-between px-4 py-2 rounded-md ${
+                    className={`w-full flex items-center justify-between px-4 py-2 cursor-pointer rounded-md ${
                       darkMode
                         ? "bg-gray-700 hover:bg-gray-600"
                         : "bg-white border border-gray-300 hover:bg-gray-100"
@@ -423,7 +422,7 @@ const Income = ({ darkMode }) => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className={`px-4 py-2 rounded-md ${
+                  className={`px-4 py-2 cursor-pointer rounded-md ${
                     darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                   }`}
                 >
@@ -432,7 +431,7 @@ const Income = ({ darkMode }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+                  className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
                     darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
                   } text-white`}
                 >
@@ -464,7 +463,7 @@ const Income = ({ darkMode }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 rounded-md ${
+                className={`px-4 py-2 rounded-md cursor-pointer ${
                   darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                 }`}
               >
@@ -473,7 +472,7 @@ const Income = ({ darkMode }) => {
               <button
                 onClick={handleDelete}
                 disabled={loading}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer hover:bg-red-600"
               >
                 {loading ? "Menghapus..." : "Hapus"}
               </button>
@@ -564,7 +563,7 @@ const Income = ({ darkMode }) => {
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() => handleEdit(income)}
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full cursor-pointer ${
                             darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
                           }`}
                           title="Edit"
@@ -576,7 +575,7 @@ const Income = ({ darkMode }) => {
                             setDeleteId(income.id);
                             setShowConfirmDelete(true);
                           }}
-                          className={`p-2 rounded-full ${
+                          className={`p-2 rounded-full cursor-pointer ${
                             darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
                           }`}
                           title="Hapus"
@@ -601,7 +600,7 @@ const Income = ({ darkMode }) => {
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-3 py-1 rounded-md cursor-pointer ${
                   currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
                 } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               >
@@ -610,7 +609,7 @@ const Income = ({ darkMode }) => {
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-3 py-1 rounded-md cursor-pointer ${
                   currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
                 } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               >
