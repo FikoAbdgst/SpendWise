@@ -5,7 +5,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import IconSelector from "../components/IconSelector";
 
 const Expense = ({ darkMode }) => {
-  // States untuk form dan data
   const [showForm, setShowForm] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
@@ -26,7 +25,6 @@ const Expense = ({ darkMode }) => {
   const [sortDirection, setSortDirection] = useState("desc");
   const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
-  // Form state
   const [formData, setFormData] = useState({
     category: "",
     amount: "",
@@ -34,48 +32,41 @@ const Expense = ({ darkMode }) => {
     icon: "💰",
   });
 
-  // API URL
   const apiUrl =
     process.env.NODE_ENV === "production"
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
 
-  // Fetch expenses on component mount
   useEffect(() => {
     fetchExpenses();
   }, [currentPage, sortColumn, sortDirection]);
 
-  // Filter expenses when search query changes
   useEffect(() => {
     filterExpenses();
   }, [searchQuery, expenses]);
 
-  // Menghitung total pemasukan
   useEffect(() => {
     const total = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
     setTotalAmount(total);
   }, [filteredExpenses]);
 
-  // Fetch expenses from API
   const fetchExpenses = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); // Cek apakah token ada
+      console.log("Token:", token);
 
       const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
-      console.log("Fetching URL:", url); // Cek apakah URL sudah benar
+      console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const result = await response.json();
-      console.log("API Response:", result); // Cek respons dari backend
+      console.log("API Response:", result);
 
-      // Ubah bagian ini
       if (result.success) {
-        // Dari console log terlihat response.data langsung berupa array
         setExpenses(result.data || []);
         setTotalPages(Math.ceil(result.count / itemsPerPage));
       } else {
@@ -89,7 +80,6 @@ const Expense = ({ darkMode }) => {
     }
   };
 
-  // Filter expenses based on search query
   const filterExpenses = () => {
     if (!searchQuery.trim()) {
       setFilteredExpenses(expenses);
@@ -105,25 +95,21 @@ const Expense = ({ darkMode }) => {
     setFilteredExpenses(filtered);
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle date change
   const handleDateChange = (date) => {
     setFormData({ ...formData, date });
   };
 
-  // Handle icon selection
   const handleIconSelect = (icon) => {
     setSelectedIcon(icon);
     setFormData({ ...formData, icon });
     setShowIconSelector(false);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -164,7 +150,7 @@ const Expense = ({ darkMode }) => {
       if (result.success) {
         setNotification({
           show: true,
-          message: editMode ? "Pemasukan berhasil diperbarui!" : "Pemasukan berhasil ditambahkan!",
+          message: editMode ? "Pengeluaran berhasil diperbarui!" : "Pengeluaran berhasil ditambahkan!",
           type: "success",
         });
 
@@ -174,7 +160,7 @@ const Expense = ({ darkMode }) => {
         setError(result.message || "Failed to save expense");
         setNotification({
           show: true,
-          message: `Gagal menyimpan pemasukan: ${result.message}`,
+          message: `Gagal menyimpan pengeluaran: ${result.message}`,
           type: "error",
         });
       }
@@ -191,7 +177,6 @@ const Expense = ({ darkMode }) => {
     }
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({
       category: "",
@@ -205,7 +190,6 @@ const Expense = ({ darkMode }) => {
     setEditId(null);
   };
 
-  // Handle edit expense
   const handleEdit = (expense) => {
     setFormData({
       category: expense.category,
@@ -219,7 +203,6 @@ const Expense = ({ darkMode }) => {
     setShowForm(true);
   };
 
-  // Handle delete expense
   const handleDelete = async () => {
     if (!deleteId) return;
 
@@ -234,20 +217,18 @@ const Expense = ({ darkMode }) => {
       const result = await response.json();
 
       if (result.success) {
-        // Tampilkan notifikasi sukses
         setNotification({
           show: true,
-          message: "Pemasukan berhasil dihapus!",
+          message: "Pengeluaran berhasil dihapus!",
           type: "success",
         });
 
-        // Refresh data
         fetchExpenses();
       } else {
         setError(result.message || "Failed to delete expense");
         setNotification({
           show: true,
-          message: "Gagal menghapus pemasukan.",
+          message: "Gagal menghapus pengeluaran.",
           type: "error",
         });
       }
@@ -266,7 +247,6 @@ const Expense = ({ darkMode }) => {
     }
   };
 
-  // Format date to readable string
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("id-ID", {
@@ -276,24 +256,19 @@ const Expense = ({ darkMode }) => {
     });
   };
 
-  // Format amount to currency
   const formatCurrency = (amount) => {
     return `Rp${Math.round(amount).toLocaleString("id-ID")}`;
   };
 
-  // Handle sort change
   const handleSort = (column) => {
     if (sortColumn === column) {
-      // Toggle sort direction if clicking on the same column
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      // Set new sort column and default to ascending
       setSortColumn(column);
       setSortDirection("asc");
     }
   };
 
-  // Hide notification after timeout
   useEffect(() => {
     if (notification.show) {
       const timer = setTimeout(() => {
@@ -306,19 +281,17 @@ const Expense = ({ darkMode }) => {
 
   return (
     <div className={`w-full min-h-screen p-3 ${darkMode ? "text-white" : "text-gray-800"}`}>
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Kelola Pemasukan</h1>
+        <h1 className="text-2xl font-bold mb-4 md:mb-0">Kelola Pengeluaran</h1>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          {/* Search Bar */}
           <div className={`relative rounded-md ${darkMode ? "bg-gray-700" : "bg-white"}`}>
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FaSearch className="text-gray-400" />
             </div>
             <input
               type="text"
-              placeholder="Cari pemasukan..."
+              placeholder="Cari pengeluaran..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
@@ -327,7 +300,6 @@ const Expense = ({ darkMode }) => {
             />
           </div>
 
-          {/* Add expense Button */}
           <button
             onClick={() => setShowForm(true)}
             className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
@@ -337,12 +309,11 @@ const Expense = ({ darkMode }) => {
             }`}
           >
             <FaPlus />
-            <span>Tambah Pemasukan</span>
+            <span>Tambah Pengeluaran</span>
           </button>
         </div>
       </div>
 
-      {/* Notification */}
       {notification.show && (
         <div
           className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${
@@ -353,7 +324,6 @@ const Expense = ({ darkMode }) => {
         </div>
       )}
 
-      {/* expense Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
@@ -363,7 +333,7 @@ const Expense = ({ darkMode }) => {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">
-                {editMode ? "Edit Pemasukan" : "Tambah Pemasukan Baru"}
+                {editMode ? "Edit Pengeluaran" : "Tambah Pengeluaran Baru"}
               </h2>
               <button
                 onClick={resetForm}
@@ -377,7 +347,6 @@ const Expense = ({ darkMode }) => {
 
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                {/* Icon Selector */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Icon</label>
                   <button
@@ -399,7 +368,6 @@ const Expense = ({ darkMode }) => {
                   )}
                 </div>
 
-                {/* category Input */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Sumber Pengeluaran</label>
                   <input
@@ -417,7 +385,6 @@ const Expense = ({ darkMode }) => {
                   />
                 </div>
 
-                {/* Amount Input */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Jumlah (Rp)</label>
                   <input
@@ -436,7 +403,6 @@ const Expense = ({ darkMode }) => {
                   />
                 </div>
 
-                {/* Date Picker */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Tanggal</label>
                   <DatePicker
@@ -452,7 +418,6 @@ const Expense = ({ darkMode }) => {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
@@ -485,7 +450,6 @@ const Expense = ({ darkMode }) => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
@@ -494,7 +458,7 @@ const Expense = ({ darkMode }) => {
             }`}
           >
             <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
-            <p className="mb-6">Apakah Anda yakin ingin menghapus pemasukan ini?</p>
+            <p className="mb-6">Apakah Anda yakin ingin menghapus pengeluaran ini?</p>
 
             <div className="flex justify-end gap-2">
               <button
@@ -517,19 +481,17 @@ const Expense = ({ darkMode }) => {
         </div>
       )}
 
-      {/* Total Amount */}
       <div className={`mb-4 p-4 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Total Pemasukan:</h2>
+          <h2 className="text-lg font-semibold">Total Pengeluaran:</h2>
           <p className="text-xl font-bold text-green-500">{formatCurrency(totalAmount)}</p>
         </div>
       </div>
 
-      {/* expense Table */}
       <div className={`rounded-lg shadow-md overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         {loading && expenses.length === 0 ? (
           <div className="p-6 text-center">
-            <p>Memuat data pemasukan...</p>
+            <p>Memuat data pengeluaran...</p>
           </div>
         ) : error ? (
           <div className="p-6 text-center text-red-500">
@@ -537,7 +499,7 @@ const Expense = ({ darkMode }) => {
           </div>
         ) : filteredExpenses.length === 0 ? (
           <div className="p-6 text-center">
-            <p>Belum ada data pemasukan.</p>
+            <p>Belum ada data pengeluaran.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -632,7 +594,6 @@ const Expense = ({ darkMode }) => {
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
             <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
