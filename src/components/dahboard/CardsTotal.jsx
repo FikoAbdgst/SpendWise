@@ -4,9 +4,12 @@ import { GrMoney } from "react-icons/gr";
 import { LuWalletMinimal } from "react-icons/lu";
 
 const formatRupiah = (amount) => {
-  return `Rp.${amount.toLocaleString("id-ID", {
+  // Pastikan amount adalah number
+  const numAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+
+  return `Rp.${numAmount.toLocaleString("id-ID", {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   })}`;
 };
 
