@@ -26,7 +26,6 @@ const Income = ({ darkMode }) => {
   const [sortDirection, setSortDirection] = useState("desc");
   const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
-  // Form state
   const [formData, setFormData] = useState({
     source: "",
     amount: "",
@@ -34,29 +33,24 @@ const Income = ({ darkMode }) => {
     icon: "💰",
   });
 
-  // API URL
   const apiUrl =
     process.env.NODE_ENV === "production"
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
 
-  // Fetch incomes on component mount
   useEffect(() => {
     fetchIncomes();
   }, [currentPage, sortColumn, sortDirection]);
 
-  // Filter incomes when search query changes
   useEffect(() => {
     filterIncomes();
   }, [searchQuery, incomes]);
 
-  // Menghitung total pemasukan
   useEffect(() => {
     const total = filteredIncomes.reduce((sum, income) => sum + parseFloat(income.amount), 0);
     setTotalAmount(total);
   }, [filteredIncomes]);
 
-  // Fetch incomes from API
   const fetchIncomes = async () => {
     setLoading(true);
     try {

@@ -302,7 +302,7 @@ const Expense = ({ darkMode }) => {
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+            className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
               darkMode
                 ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-blue-500 text-white hover:bg-blue-600"
@@ -422,7 +422,7 @@ const Expense = ({ darkMode }) => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className={`px-4 py-2 rounded-md ${
+                  className={`px-4 py-2 cursor-pointer rounded-md ${
                     darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                   }`}
                 >
@@ -431,7 +431,7 @@ const Expense = ({ darkMode }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
+                  className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
                     darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
                   } text-white`}
                 >
@@ -463,7 +463,7 @@ const Expense = ({ darkMode }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 rounded-md ${
+                className={`px-4 py-2 cursor-pointer cursor-pointer rounded-md ${
                   darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                 }`}
               >
@@ -472,7 +472,7 @@ const Expense = ({ darkMode }) => {
               <button
                 onClick={handleDelete}
                 disabled={loading}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white cursor-pointer rounded-md hover:bg-red-600"
               >
                 {loading ? "Menghapus..." : "Hapus"}
               </button>
@@ -512,9 +512,6 @@ const Expense = ({ darkMode }) => {
                   >
                     <div className="flex items-center">
                       <span>Tanggal</span>
-                      {sortColumn === "date" && (
-                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
-                      )}
                     </div>
                   </th>
                   <th
