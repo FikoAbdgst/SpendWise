@@ -32,7 +32,6 @@ const Income = ({ darkMode }) => {
     amount: "",
     date: new Date(),
     icon: "💰",
-    notes: "",
   });
 
   // API URL
@@ -62,18 +61,23 @@ const Income = ({ darkMode }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      // Tambahkan parameter sorting ke URL
-      const response = await fetch(
-        `${apiUrl}/api/income?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      console.log("Token:", token); // Cek apakah token ada
+
+      const url = `${apiUrl}/api/income?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
+      console.log("Fetching URL:", url); // Cek apakah URL sudah benar
+
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const result = await response.json();
+      console.log("API Response:", result); // Cek respons dari backend
+
+      // Ubah bagian ini
       if (result.success) {
-        setIncomes(result.data.items || []);
-        setTotalPages(Math.ceil(result.data.total / itemsPerPage));
+        // Dari console log terlihat response.data langsung berupa array
+        setIncomes(result.data || []);
+        setTotalPages(Math.ceil(result.count / itemsPerPage));
       } else {
         setError(result.message || "Failed to fetch incomes");
       }
@@ -95,9 +99,7 @@ const Income = ({ darkMode }) => {
     const query = searchQuery.toLowerCase();
     const filtered = incomes.filter(
       (income) =>
-        income.source.toLowerCase().includes(query) ||
-        income.notes?.toLowerCase().includes(query) ||
-        income.amount.toString().includes(query)
+        income.source.toLowerCase().includes(query) || income.amount.toString().includes(query)
     );
 
     setFilteredIncomes(filtered);
@@ -130,10 +132,20 @@ const Income = ({ darkMode }) => {
       const token = localStorage.getItem("token");
       const url = editMode ? `${apiUrl}/api/income/${editId}` : `${apiUrl}/api/income`;
 
-      const method = editMode ? "PUT" : "POST";
+      const formattedDate =
+        formData.date instanceof Date
+          ? formData.date.toISOString().split("T")[0]
+          : new Date(formData.date).toISOString().split("T")[0];
+
+      console.log("Data yang akan dikirim:", {
+        source: formData.source,
+        amount: parseFloat(formData.amount),
+        date: formattedDate,
+        icon: formData.icon,
+      });
 
       const response = await fetch(url, {
-        method,
+        method: editMode ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -141,30 +153,28 @@ const Income = ({ darkMode }) => {
         body: JSON.stringify({
           source: formData.source,
           amount: parseFloat(formData.amount),
-          date: formData.date,
+          date: formattedDate,
           icon: formData.icon,
-          notes: formData.notes,
         }),
       });
 
       const result = await response.json();
+      console.log("Response dari server:", result);
 
       if (result.success) {
-        // Tampilkan notifikasi sukses
         setNotification({
           show: true,
           message: editMode ? "Pemasukan berhasil diperbarui!" : "Pemasukan berhasil ditambahkan!",
           type: "success",
         });
 
-        // Reset form dan refresh data
         resetForm();
         fetchIncomes();
       } else {
         setError(result.message || "Failed to save income");
         setNotification({
           show: true,
-          message: "Gagal menyimpan pemasukan. Silakan coba lagi.",
+          message: `Gagal menyimpan pemasukan: ${result.message}`,
           type: "error",
         });
       }
@@ -188,7 +198,6 @@ const Income = ({ darkMode }) => {
       amount: "",
       date: new Date(),
       icon: "💰",
-      notes: "",
     });
     setSelectedIcon("💰");
     setShowForm(false);
@@ -203,7 +212,6 @@ const Income = ({ darkMode }) => {
       amount: income.amount,
       date: new Date(income.date),
       icon: income.icon || "💰",
-      notes: income.notes || "",
     });
     setSelectedIcon(income.icon || "💰");
     setEditMode(true);
@@ -444,23 +452,6 @@ const Income = ({ darkMode }) => {
                 </div>
               </div>
 
-              {/* Notes Input */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">Catatan (Opsional)</label>
-                <textarea
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleInputChange}
-                  rows="3"
-                  className={`w-full px-4 py-2 rounded-md ${
-                    darkMode
-                      ? "bg-gray-700 text-white"
-                      : "bg-white text-gray-800 border border-gray-300"
-                  }`}
-                  placeholder="Tambahkan catatan..."
-                ></textarea>
-              </div>
-
               {/* Submit Button */}
               <div className="flex justify-end gap-2">
                 <button
@@ -604,11 +595,6 @@ const Income = ({ darkMode }) => {
                     <td className="px-4 py-3">
                       <div>
                         <p className="font-medium">{income.source}</p>
-                        {income.notes && (
-                          <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                            {income.notes}
-                          </p>
-                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right text-green-500 font-medium">
