@@ -12,12 +12,31 @@ const Dashboard = ({ darkMode }) => {
   const [transactionFilter, setTransactionFilter] = useState("all");
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [monthlyData, setMonthlyData] = useState([]);
 
   const maxVisibleTransactions = 6;
   const apiUrl =
     process.env.NODE_ENV === "production"
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
+
+  // Fungsi untuk mendapatkan data 6 bulan terakhir
+  const getLast6MonthsData = () => {
+    const data = [];
+    const today = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      data.push({
+        month: date,
+        income: 0,
+        expenses: 0,
+        balance: 0,
+      });
+    }
+
+    return data;
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -30,20 +49,45 @@ const Dashboard = ({ darkMode }) => {
         const result = await response.json();
         if (result.success) {
           setDashboardData(result.data);
-          const formattedTransactions = result.data.recentTransactions.map((transaction) => ({
-            ...transaction,
-            formattedAmount:
-              transaction.type === "income"
-                ? `+Rp.${Math.round(transaction.amount).toLocaleString("id-ID")}`
-                : `-Rp.${Math.round(transaction.amount).toLocaleString("id-ID")}`,
-          }));
-          setTransactions(formattedTransactions);
-          setFilteredTransactions(formattedTransactions);
+
+          // Tambahan: Fetch recent transactions
+          const transactionsResponse = await fetch(`${apiUrl}/api/transactions/recent`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const transactionsResult = await transactionsResponse.json();
+          if (transactionsResult.success) {
+            const formattedTransactions = transactionsResult.data.map((transaction) => ({
+              ...transaction,
+              formattedAmount:
+                transaction.type === "income"
+                  ? `+Rp.${Math.round(transaction.amount).toLocaleString("id-ID")}`
+                  : `-Rp.${Math.round(transaction.amount).toLocaleString("id-ID")}`,
+            }));
+
+            setTransactions(formattedTransactions);
+            setFilteredTransactions(formattedTransactions);
+          }
+
+          // Tambahan: Fetch monthly data
+          const monthlyResponse = await fetch(`${apiUrl}/api/transactions/monthly`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const monthlyResult = await monthlyResponse.json();
+          if (monthlyResult.success) {
+            setMonthlyData(monthlyResult.data);
+          } else {
+            // Jika tidak ada endpoint untuk data bulanan, gunakan data dummy
+            setMonthlyData(getLast6MonthsData());
+          }
         } else {
           console.error("Error fetching dashboard data:", result.message);
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
+        // Jika terjadi error, gunakan data dummy untuk monthly data
+        setMonthlyData(getLast6MonthsData());
       }
     };
 
@@ -81,12 +125,14 @@ const Dashboard = ({ darkMode }) => {
             totalPengeluaran={dashboardData.totalExpenses}
           />
 
-          <div className="flex flex-col lg:flex-row w-full gap-5">
+          <div className="flex flex-col lg:flex-row w-full gap-5 mb-5">
             <StatistikTotal
               darkMode={darkMode}
               totalSaldo={dashboardData.balance}
               totalPemasukan={dashboardData.totalIncome}
               totalPengeluaran={dashboardData.totalExpenses}
+              expenseCategories={dashboardData.expenseCategories}
+              incomeSources={dashboardData.incomeSources}
             />
 
             <RecentTransaction
@@ -109,9 +155,8 @@ const Dashboard = ({ darkMode }) => {
               }
             />
           </div>
-          <div className="w-full mb-5">
-            <MonthlyBalanceChart darkMode={darkMode} monthlyData={dashboardData.monthlyData} />
-          </div>
+
+          <MonthlyBalanceChart darkMode={darkMode} monthlyData={monthlyData} />
         </>
       )}
     </div>

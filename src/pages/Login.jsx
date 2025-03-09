@@ -18,9 +18,10 @@ const Login = ({ setIsLoggedIn, setUsername }) => {
       [name]: value,
     });
   };
-  const API_URL = process.env.NODE_ENV === 'production'
-    ? 'https://backend-spendwise.vercel.app'
-    : 'http://localhost:3000';
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "https://backend-spendwise.vercel.app"
+      : "http://localhost:3000";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
