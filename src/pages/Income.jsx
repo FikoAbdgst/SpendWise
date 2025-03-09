@@ -55,21 +55,19 @@ const Income = ({ darkMode }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); // Cek apakah token ada
+      console.log("Token:", token);
 
       const url = `${apiUrl}/api/income?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
-      console.log("Fetching URL:", url); // Cek apakah URL sudah benar
+      console.log("Fetching URL:", url);
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const result = await response.json();
-      console.log("API Response:", result); // Cek respons dari backend
+      console.log("API Response:", result);
 
-      // Ubah bagian ini
       if (result.success) {
-        // Dari console log terlihat response.data langsung berupa array
         setIncomes(result.data || []);
         setTotalPages(Math.ceil(result.count / itemsPerPage));
       } else {
@@ -83,7 +81,6 @@ const Income = ({ darkMode }) => {
     }
   };
 
-  // Filter incomes based on search query
   const filterIncomes = () => {
     if (!searchQuery.trim()) {
       setFilteredIncomes(incomes);
@@ -99,25 +96,21 @@ const Income = ({ darkMode }) => {
     setFilteredIncomes(filtered);
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle date change
   const handleDateChange = (date) => {
     setFormData({ ...formData, date });
   };
 
-  // Handle icon selection
   const handleIconSelect = (icon) => {
     setSelectedIcon(icon);
     setFormData({ ...formData, icon });
     setShowIconSelector(false);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -185,7 +178,6 @@ const Income = ({ darkMode }) => {
     }
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({
       source: "",
@@ -199,7 +191,6 @@ const Income = ({ darkMode }) => {
     setEditId(null);
   };
 
-  // Handle edit income
   const handleEdit = (income) => {
     setFormData({
       source: income.source,
@@ -213,7 +204,6 @@ const Income = ({ darkMode }) => {
     setShowForm(true);
   };
 
-  // Handle delete income
   const handleDelete = async () => {
     if (!deleteId) return;
 
@@ -228,14 +218,12 @@ const Income = ({ darkMode }) => {
       const result = await response.json();
 
       if (result.success) {
-        // Tampilkan notifikasi sukses
         setNotification({
           show: true,
           message: "Pemasukan berhasil dihapus!",
           type: "success",
         });
 
-        // Refresh data
         fetchIncomes();
       } else {
         setError(result.message || "Failed to delete income");
@@ -260,7 +248,6 @@ const Income = ({ darkMode }) => {
     }
   };
 
-  // Format date to readable string
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("id-ID", {
@@ -270,24 +257,19 @@ const Income = ({ darkMode }) => {
     });
   };
 
-  // Format amount to currency
   const formatCurrency = (amount) => {
     return `Rp${Math.round(amount).toLocaleString("id-ID")}`;
   };
 
-  // Handle sort change
   const handleSort = (column) => {
     if (sortColumn === column) {
-      // Toggle sort direction if clicking on the same column
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      // Set new sort column and default to ascending
       setSortColumn(column);
       setSortDirection("asc");
     }
   };
 
-  // Hide notification after timeout
   useEffect(() => {
     if (notification.show) {
       const timer = setTimeout(() => {
@@ -300,12 +282,10 @@ const Income = ({ darkMode }) => {
 
   return (
     <div className={`w-full min-h-screen p-3 ${darkMode ? "text-white" : "text-gray-800"}`}>
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Kelola Pemasukan</h1>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          {/* Search Bar */}
           <div className={`relative rounded-md ${darkMode ? "bg-gray-700" : "bg-white"}`}>
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FaSearch className="text-gray-400" />
@@ -321,7 +301,6 @@ const Income = ({ darkMode }) => {
             />
           </div>
 
-          {/* Add Income Button */}
           <button
             onClick={() => setShowForm(true)}
             className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md ${
@@ -336,7 +315,6 @@ const Income = ({ darkMode }) => {
         </div>
       </div>
 
-      {/* Notification */}
       {notification.show && (
         <div
           className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${
@@ -347,7 +325,6 @@ const Income = ({ darkMode }) => {
         </div>
       )}
 
-      {/* Income Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
@@ -371,7 +348,6 @@ const Income = ({ darkMode }) => {
 
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                {/* Icon Selector */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Icon</label>
                   <button
@@ -393,7 +369,6 @@ const Income = ({ darkMode }) => {
                   )}
                 </div>
 
-                {/* Source Input */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Sumber Pemasukan</label>
                   <input
@@ -411,7 +386,6 @@ const Income = ({ darkMode }) => {
                   />
                 </div>
 
-                {/* Amount Input */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Jumlah (Rp)</label>
                   <input
@@ -430,7 +404,6 @@ const Income = ({ darkMode }) => {
                   />
                 </div>
 
-                {/* Date Picker */}
                 <div>
                   <label className="block text-sm font-medium mb-1">Tanggal</label>
                   <DatePicker
@@ -446,7 +419,6 @@ const Income = ({ darkMode }) => {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
@@ -479,7 +451,6 @@ const Income = ({ darkMode }) => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
@@ -511,7 +482,6 @@ const Income = ({ darkMode }) => {
         </div>
       )}
 
-      {/* Total Amount */}
       <div className={`mb-4 p-4 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">Total Pemasukan:</h2>
@@ -519,7 +489,6 @@ const Income = ({ darkMode }) => {
         </div>
       </div>
 
-      {/* Income Table */}
       <div className={`rounded-lg shadow-md overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         {loading && incomes.length === 0 ? (
           <div className="p-6 text-center">
@@ -544,9 +513,6 @@ const Income = ({ darkMode }) => {
                   >
                     <div className="flex items-center">
                       <span>Tanggal</span>
-                      {sortColumn === "date" && (
-                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
-                      )}
                     </div>
                   </th>
                   <th
@@ -626,7 +592,6 @@ const Income = ({ darkMode }) => {
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
             <p className={darkMode ? "text-gray-400" : "text-gray-500"}>

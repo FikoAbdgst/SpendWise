@@ -463,7 +463,7 @@ const Expense = ({ darkMode }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 cursor-pointer cursor-pointer rounded-md ${
+                className={`px-4 py-2 cursor-pointer rounded-md ${
                   darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                 }`}
               >
