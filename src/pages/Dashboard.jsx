@@ -45,7 +45,6 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-
         const result = await response.json();
         if (result.success) {
           setDashboardData(result.data);
@@ -69,7 +68,7 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             setFilteredTransactions(formattedTransactions);
           }
 
-          const monthlyResponse = await fetch(`${apiUrl}/api/transactions/monthly`, {
+          const monthlyResponse = await fetch(`${apiUrl}/api/dashboard/monthly`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
@@ -108,8 +107,9 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       <div className="flex items-center justify-center mb-5 relative">
         {isLoggedIn && (
           <button
-            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${
+              darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+            } transition-colors duration-200`}
             onClick={toggleMobileMenu}
           >
             <svg
@@ -130,8 +130,9 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         )}
 
         <h1
-          className={`text-2xl font-bold text-center md:text-start ${darkMode ? "text-white" : "text-black"
-            }`}
+          className={`text-2xl font-bold text-center md:text-start ${
+            darkMode ? "text-white" : "text-black"
+          }`}
         >
           Dashboard
         </h1>
@@ -171,8 +172,8 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
                 transactionFilter === "all"
                   ? "Semua"
                   : transactionFilter === "income"
-                    ? "Pemasukan"
-                    : "Pengeluaran"
+                  ? "Pemasukan"
+                  : "Pengeluaran"
               }
             />
           </div>

@@ -30,7 +30,7 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         )}
 
         <h1
-          className={`text-center md:text-start text-2xl font-bold ${
+          className={`text-center md:text-start mb-1 md:mb-5 text-2xl font-bold ${
             darkMode ? "text-white" : "text-black"
           }`}
         >
