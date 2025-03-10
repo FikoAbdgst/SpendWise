@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import IconSelector from "../components/IconSelector";
 
-const Expense = ({ darkMode }) => {
+const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [showForm, setShowForm] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
@@ -282,7 +282,32 @@ const Expense = ({ darkMode }) => {
   return (
     <div className={`w-full min-h-screen p-3 ${darkMode ? "text-white" : "text-gray-800"}`}>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Kelola Pengeluaran</h1>
+        <div className="flex items-center justify-center mb-5 md:mb-0 relative">
+          {isLoggedIn && (
+            <button
+              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+                } transition-colors duration-200`}
+              onClick={toggleMobileMenu}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          )}
+
+          <h1 className="text-2xl font-bold ">Kelola Pemasukan</h1>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className={`relative rounded-md ${darkMode ? "bg-gray-700" : "bg-white"}`}>
@@ -294,19 +319,17 @@ const Expense = ({ darkMode }) => {
               placeholder="Cari pengeluaran..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
-                darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
-              }`}
+              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
+                }`}
             />
           </div>
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
-              darkMode
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
+            className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${darkMode
+              ? "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
           >
             <FaPlus />
             <span>Tambah Pengeluaran</span>
@@ -316,9 +339,8 @@ const Expense = ({ darkMode }) => {
 
       {notification.show && (
         <div
-          className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${
-            notification.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
-          }`}
+          className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${notification.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+            }`}
         >
           {notification.message}
         </div>
@@ -327,9 +349,8 @@ const Expense = ({ darkMode }) => {
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
-            className={`w-full max-w-2xl rounded-lg shadow-lg p-6 ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
+            className={`w-full max-w-2xl rounded-lg shadow-lg p-6 ${darkMode ? "bg-gray-800" : "bg-white"
+              }`}
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">
@@ -337,9 +358,8 @@ const Expense = ({ darkMode }) => {
               </h2>
               <button
                 onClick={resetForm}
-                className={`p-2 rounded-full cursor-pointer hover:bg-opacity-10 ${
-                  darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
-                }`}
+                className={`p-2 rounded-full cursor-pointer hover:bg-opacity-10 ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
+                  }`}
               >
                 <FaTimes />
               </button>
@@ -352,11 +372,10 @@ const Expense = ({ darkMode }) => {
                   <button
                     type="button"
                     onClick={() => setShowIconSelector(!showIconSelector)}
-                    className={`w-full cursor-pointer flex items-center justify-between px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 hover:bg-gray-600"
-                        : "bg-white border border-gray-300 hover:bg-gray-100"
-                    }`}
+                    className={`w-full cursor-pointer flex items-center justify-between px-4 py-2 rounded-md ${darkMode
+                      ? "bg-gray-700 hover:bg-gray-600"
+                      : "bg-white border border-gray-300 hover:bg-gray-100"
+                      }`}
                   >
                     <span className="text-2xl">{selectedIcon}</span>
                     <span>Pilih Icon</span>
@@ -376,11 +395,10 @@ const Expense = ({ darkMode }) => {
                     value={formData.category}
                     onChange={handleInputChange}
                     required
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
+                    className={`w-full px-4 py-2 rounded-md ${darkMode
+                      ? "bg-gray-700 text-white"
+                      : "bg-white text-gray-800 border border-gray-300"
+                      }`}
                     placeholder="Belanja, Transportasi, dll"
                   />
                 </div>
@@ -394,11 +412,10 @@ const Expense = ({ darkMode }) => {
                     onChange={handleInputChange}
                     required
                     min="0"
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
+                    className={`w-full px-4 py-2 rounded-md ${darkMode
+                      ? "bg-gray-700 text-white"
+                      : "bg-white text-gray-800 border border-gray-300"
+                      }`}
                     placeholder="contoh: 100000"
                   />
                 </div>
@@ -409,11 +426,10 @@ const Expense = ({ darkMode }) => {
                     selected={formData.date}
                     onChange={handleDateChange}
                     dateFormat="dd/MM/yyyy"
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
+                    className={`w-full px-4 py-2 rounded-md ${darkMode
+                      ? "bg-gray-700 text-white"
+                      : "bg-white text-gray-800 border border-gray-300"
+                      }`}
                   />
                 </div>
               </div>
@@ -422,18 +438,16 @@ const Expense = ({ darkMode }) => {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className={`px-4 py-2 cursor-pointer rounded-md ${
-                    darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                  }`}
+                  className={`px-4 py-2 cursor-pointer rounded-md ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                    }`}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
-                    darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
-                  } text-white`}
+                  className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
+                    } text-white`}
                 >
                   {loading ? (
                     "Menyimpan..."
@@ -453,9 +467,8 @@ const Expense = ({ darkMode }) => {
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
-            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
+            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${darkMode ? "bg-gray-800" : "bg-white"
+              }`}
           >
             <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
             <p className="mb-6">Apakah Anda yakin ingin menghapus pengeluaran ini?</p>
@@ -463,9 +476,8 @@ const Expense = ({ darkMode }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 cursor-pointer rounded-md ${
-                  darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                }`}
+                className={`px-4 py-2 cursor-pointer rounded-md ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                  }`}
               >
                 Batal
               </button>
@@ -563,9 +575,8 @@ const Expense = ({ darkMode }) => {
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() => handleEdit(expense)}
-                          className={`p-2 rounded-full cursor-pointer ${
-                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
+                          className={`p-2 rounded-full cursor-pointer ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                            }`}
                           title="Edit"
                         >
                           <FaEdit className={darkMode ? "text-blue-400" : "text-blue-500"} />
@@ -575,9 +586,8 @@ const Expense = ({ darkMode }) => {
                             setDeleteId(expense.id);
                             setShowConfirmDelete(true);
                           }}
-                          className={`p-2 rounded-full cursor-pointer ${
-                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
+                          className={`p-2 rounded-full cursor-pointer ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                            }`}
                           title="Hapus"
                         >
                           <FaTrash className={darkMode ? "text-red-400" : "text-red-500"} />
@@ -600,18 +610,16 @@ const Expense = ({ darkMode }) => {
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                className={`px-3 py-1 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               >
                 Sebelumnya
               </button>
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                className={`px-3 py-1 rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               >
                 Selanjutnya
               </button>

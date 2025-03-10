@@ -15,9 +15,8 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
       const data = payload[0].payload;
       return (
         <div
-          className={`${
-            darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
-          } p-3 shadow-md rounded-md border`}
+          className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
+            } p-3 shadow-md rounded-md border`}
         >
           <p className="font-semibold text-sm" style={{ color: data.color }}>
             {data.name}
@@ -34,11 +33,11 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
   const CustomLegend = (props) => {
     const { payload } = props;
     return (
-      <ul className="flex justify-center items-center gap-8 mt-4">
+      <ul className="flex justify-center items-center flex-col md:flex-row gap-1 md:gap-8  ">
         {payload.map((entry, index) => (
-          <li key={`item-${index}`} className="flex items-center gap-2">
+          <li key={`item-${index}`} className="flex items-center   gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className={`${darkMode ? "text-white" : "text-black"} font-medium text-sm`}>
+            <span className={`${darkMode ? "text-white" : "text-black"} font-medium text-xs md:text-sm`}>
               {entry.payload.name}: Rp{Math.abs(entry.payload.value).toLocaleString()}
             </span>
           </li>
@@ -52,11 +51,10 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
   console.log("Filtered Chart Data:", filteredChartData);
 
   return (
-    <div className="w-full lg:w-[60%]">
+    <div className="w-full lg:w-[60%] ">
       <div
-        className={`${
-          darkMode ? "bg-gray-800" : "bg-white"
-        } w-full h-full p-5 rounded-xl shadow transition-colors duration-200`}
+        className={`${darkMode ? "bg-gray-800" : "bg-white"
+          } w-full h-full p-5 rounded-xl shadow transition-colors duration-200`}
       >
         <h2 className={`text-lg font-semibold mb-3 ${darkMode ? "text-white" : "text-black"}`}>
           Statistik Keuangan

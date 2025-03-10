@@ -98,7 +98,12 @@ function App() {
         {/* Sidebar for desktop */}
         {isLoggedIn && (
           <div className="hidden md:block md:w-64 h-full sidebar-container">
-            <Sidebar username={username} setIsLoggedIn={handleLogout} darkMode={darkMode} />
+            <Sidebar
+              username={username}
+              setIsLoggedIn={handleLogout}
+              darkMode={darkMode}
+              toggleMobileMenu={toggleMobileMenu}
+            />
           </div>
         )}
 
@@ -108,10 +113,14 @@ function App() {
             className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform sidebar-container ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
               }`}
           >
-            <Sidebar username={username} setIsLoggedIn={handleLogout} darkMode={darkMode} />
+            <Sidebar
+              username={username}
+              setIsLoggedIn={handleLogout}
+              darkMode={darkMode}
+              toggleMobileMenu={toggleMobileMenu}
+            />
           </div>
         )}
-
         {/* Overlay for mobile menu */}
         {isLoggedIn && isMobileMenuOpen && (
           <div
@@ -126,28 +135,7 @@ function App() {
             } transition-colors duration-200`}
         >
           {/* Mobile menu toggle button */}
-          {isLoggedIn && (
-            <button
-              className={`md:hidden fixed top-5 left-5 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-                } transition-colors duration-200`}
-              onClick={toggleMobileMenu}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          )}
+
 
           <div className={`p-3 md:p-6 ${isLoggedIn ? "md:ml-0 pt-3" : ""}`}>
             <Routes>
@@ -172,21 +160,21 @@ function App() {
 
               <Route
                 path="/"
-                element={<ProtectedRoute element={<Dashboard darkMode={darkMode} />} />}
+                element={<ProtectedRoute element={<Dashboard isLoggedIn={isLoggedIn} toggleMobileMenu={toggleMobileMenu} darkMode={darkMode} />} />}
               />
               <Route
                 path="/income"
-                element={<ProtectedRoute element={<Income darkMode={darkMode} />} />}
+                element={<ProtectedRoute element={<Income isLoggedIn={isLoggedIn} toggleMobileMenu={toggleMobileMenu} darkMode={darkMode} />} />}
               />
               <Route
                 path="/expense"
-                element={<ProtectedRoute element={<Expense darkMode={darkMode} />} />}
+                element={<ProtectedRoute element={<Expense isLoggedIn={isLoggedIn} toggleMobileMenu={toggleMobileMenu} darkMode={darkMode} />} />}
               />
               <Route
                 path="/settings"
                 element={
                   <ProtectedRoute
-                    element={<Setting darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+                    element={<Setting darkMode={darkMode} isLoggedIn={isLoggedIn} toggleMobileMenu={toggleMobileMenu} toggleDarkMode={toggleDarkMode} />}
                   />
                 }
               />

@@ -5,7 +5,7 @@ import StatistikTotal from "../components/dahboard/StatistikTotal";
 import RecentTransaction from "../components/dahboard/RecentTransaction";
 import MonthlyBalanceChart from "../components/dahboard/MonthlyBalanceCart";
 
-const Dashboard = ({ darkMode }) => {
+const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [dashboardData, setDashboardData] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -104,13 +104,38 @@ const Dashboard = ({ darkMode }) => {
     : filteredTransactions.slice(0, maxVisibleTransactions);
 
   return (
-    <div className="w-full h-screen p-3 overflow-y-auto">
-      <h1
-        className={`text-2xl font-bold mb-6 text-center md:text-start ${darkMode ? "text-white" : "text-black"
-          }`}
-      >
-        Dashboard
-      </h1>
+    <div className="w-full h-screen p-3">
+      <div className="flex items-center justify-center mb-5 relative">
+        {isLoggedIn && (
+          <button
+            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+              } transition-colors duration-200`}
+            onClick={toggleMobileMenu}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        )}
+
+        <h1
+          className={`text-2xl font-bold text-center md:text-start ${darkMode ? "text-white" : "text-black"
+            }`}
+        >
+          Dashboard
+        </h1>
+      </div>
 
       {dashboardData && (
         <>
