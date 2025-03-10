@@ -7,8 +7,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
       <div className="flex items-center justify-center mb-5 md:mb-0 relative">
         {isLoggedIn && (
           <button
-            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${
+              darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+            } transition-colors duration-200`}
             onClick={toggleMobileMenu}
           >
             <svg
@@ -28,12 +29,19 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
           </button>
         )}
 
-        <h1 className={`text-center md:text-start text-2xl font-bold ${darkMode ? "text-white" : "text-black"}`}>Settings</h1>
+        <h1
+          className={`text-center md:text-start text-2xl font-bold ${
+            darkMode ? "text-white" : "text-black"
+          }`}
+        >
+          Settings
+        </h1>
       </div>
 
       <div
-        className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${darkMode ? "bg-gray-800" : "bg-white"
-          }`}
+        className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        }`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -56,12 +64,14 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
           <button
             onClick={toggleDarkMode}
-            className={`relative inline-flex h-6 w-16 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${darkMode ? "bg-purple-600" : "bg-gray-300"
-              }`}
+            className={`relative inline-flex h-6 w-18 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${
+              darkMode ? "bg-purple-600" : "bg-gray-300"
+            }`}
           >
             <span
-              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${darkMode ? "translate-x-6" : "translate-x-1"
-                }`}
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${
+                darkMode ? "translate-x-6" : "translate-x-1"
+              }`}
             />
           </button>
         </div>
