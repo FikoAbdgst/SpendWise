@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiBarChart2, FiTrendingUp, FiTrendingDown, FiSettings, FiLogOut } from "react-icons/fi";
 
-const Sidebar = ({ setIsLoggedIn, darkMode }) => {
+const Sidebar = ({ setIsLoggedIn, darkMode, toggleMobileMenu }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -11,6 +11,13 @@ const Sidebar = ({ setIsLoggedIn, darkMode }) => {
     localStorage.removeItem("currentUser");
     setIsLoggedIn(false);
     navigate("/login");
+  };
+
+  const handleMenuClick = () => {
+    // Close the sidebar on mobile when a menu item is clicked
+    if (window.innerWidth < 768 && toggleMobileMenu) {
+      toggleMobileMenu();
+    }
   };
 
   const menuItems = [
@@ -22,11 +29,9 @@ const Sidebar = ({ setIsLoggedIn, darkMode }) => {
 
   return (
     <div
-      className={`${
-        darkMode ? "bg-gray-800 text-gray-300" : "bg-white text-gray-500"
-      } w-full h-full flex flex-col border-r ${
-        darkMode ? "border-gray-700" : "border-gray-200"
-      } transition-colors duration-200`}
+      className={`${darkMode ? "bg-gray-800 text-gray-300" : "bg-white text-gray-500"
+        } w-full h-full flex flex-col border-r ${darkMode ? "border-gray-700" : "border-gray-200"
+        } transition-colors duration-200`}
     >
       {/* Logo */}
       <div className="px-4 md:px-6 py-4 md:py-6">
@@ -47,16 +52,16 @@ const Sidebar = ({ setIsLoggedIn, darkMode }) => {
               <li key={item.name} className="pr-4 md:pr-14">
                 <Link
                   to={item.path}
+                  onClick={handleMenuClick}
                   className={`flex items-center px-4 py-2 md:py-3 rounded-r-xl transition-colors duration-200
-                                         ${
-                                           isActive
-                                             ? darkMode
-                                               ? "bg-gray-900 text-white font-semibold" // Warna active di dark mode
-                                               : "bg-gray-200 text-black font-semibold" // Warna active di light mode
-                                             : darkMode
-                                             ? "text-gray-400 hover:bg-gray-700" // Warna non-active di dark mode
-                                             : "text-gray-500 hover:bg-gray-100" // Warna non-active di light mode
-                                         }`}
+                                         ${isActive
+                      ? darkMode
+                        ? "bg-gray-900 text-white font-semibold" // Warna active di dark mode
+                        : "bg-gray-200 text-black font-semibold" // Warna active di light mode
+                      : darkMode
+                        ? "text-gray-400 hover:bg-gray-700" // Warna non-active di dark mode
+                        : "text-gray-500 hover:bg-gray-100" // Warna non-active di light mode
+                    }`}
                 >
                   <span className="w-6">{item.icon}</span>
                   <span className="ml-3 text-sm md:text-base">{item.name}</span>
@@ -70,10 +75,12 @@ const Sidebar = ({ setIsLoggedIn, darkMode }) => {
       {/* Logout button */}
       <div className="py-6 md:py-10 pr-4 md:pr-14 mt-auto">
         <button
-          onClick={handleLogout}
-          className={`flex cursor-pointer items-center px-4 py-2 md:py-3 w-full ${
-            darkMode ? "text-gray-300 hover:bg-gray-700" : "text-gray-500 hover:bg-gray-100"
-          } rounded-r-xl transition-colors duration-200`}
+          onClick={() => {
+            handleLogout();
+            handleMenuClick();
+          }}
+          className={`flex cursor-pointer items-center px-4 py-2 md:py-3 w-full ${darkMode ? "text-gray-300 hover:bg-gray-700" : "text-gray-500 hover:bg-gray-100"
+            } rounded-r-xl transition-colors duration-200`}
         >
           <FiLogOut size={20} className="w-6" />
           <span className="ml-3 text-sm md:text-base">Log out</span>

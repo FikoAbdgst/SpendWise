@@ -50,7 +50,7 @@ const Dashboard = ({ darkMode }) => {
           setDashboardData(result.data);
 
           // Tambahan: Fetch recent transactions
-          const transactionsResponse = await fetch(`${apiUrl}/api/transactions/recent`, {
+          const transactionsResponse = await fetch(`${apiUrl}/transactions/recent`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
@@ -105,9 +105,8 @@ const Dashboard = ({ darkMode }) => {
   return (
     <div className="w-full h-screen p-3 overflow-y-auto">
       <h1
-        className={`text-2xl font-bold mb-6 text-center md:text-start ${
-          darkMode ? "text-white" : "text-black"
-        }`}
+        className={`text-2xl font-bold mb-6 text-center md:text-start ${darkMode ? "text-white" : "text-black"
+          }`}
       >
         Dashboard
       </h1>
@@ -146,8 +145,8 @@ const Dashboard = ({ darkMode }) => {
                 transactionFilter === "all"
                   ? "Semua"
                   : transactionFilter === "income"
-                  ? "Pemasukan"
-                  : "Pengeluaran"
+                    ? "Pemasukan"
+                    : "Pengeluaran"
               }
             />
           </div>

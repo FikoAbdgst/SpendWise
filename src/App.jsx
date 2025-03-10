@@ -105,9 +105,8 @@ function App() {
         {/* Mobile sidebar (will slide in) */}
         {isLoggedIn && (
           <div
-            className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform sidebar-container ${
-              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
+            className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform sidebar-container ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
           >
             <Sidebar username={username} setIsLoggedIn={handleLogout} darkMode={darkMode} />
           </div>
@@ -123,16 +122,14 @@ function App() {
 
         {/* Main content */}
         <div
-          className={`flex-1 overflow-auto ${
-            darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"
-          } transition-colors duration-200`}
+          className={`flex-1 overflow-auto ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"
+            } transition-colors duration-200`}
         >
           {/* Mobile menu toggle button */}
           {isLoggedIn && (
             <button
-              className={`md:hidden fixed top-5 left-5 p-2 rounded-md bg-transparent border ${
-                darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+              className={`md:hidden fixed top-5 left-5 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+                } transition-colors duration-200`}
               onClick={toggleMobileMenu}
             >
               <svg
