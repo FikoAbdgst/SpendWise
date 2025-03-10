@@ -2,14 +2,12 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) => {
-  // Perbaikan: pastikan semua nilai positif untuk keperluan penampilan chart
   const chartData = [
-    { name: "Sisa Saldo", value: Math.abs(totalSaldo), color: "#8B5CF6" }, // Warna ungu
-    { name: "Total Pengeluaran", value: Math.abs(totalPengeluaran), color: "#EF4444" }, // Warna merah
-    { name: "Total Pemasukan", value: Math.abs(totalPemasukan), color: "#F97316" }, // Warna oranye
+    { name: "Sisa Saldo", value: Math.abs(totalSaldo), color: "#8B5CF6" },
+    { name: "Total Pengeluaran", value: Math.abs(totalPengeluaran), color: "#EF4444" },
+    { name: "Total Pemasukan", value: Math.abs(totalPemasukan), color: "#F97316" },
   ];
 
-  // Perbaikan: filter data nol atau negatif agar tidak mengacaukan chart
   const filteredChartData = chartData.filter((item) => item.value > 0);
 
   const CustomTooltip = ({ active, payload }) => {
@@ -36,11 +34,11 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
   const CustomLegend = (props) => {
     const { payload } = props;
     return (
-      <ul className="flex justify-center items-center gap-8 mt-4">
+      <ul className="flex flex-col md:flex-row justify-center items-center gap-4 mt-0 md:mt-8">
         {payload.map((entry, index) => (
           <li key={`item-${index}`} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className={`${darkMode ? "text-white" : "text-black"} font-medium text-sm`}>
+            <span className={`${darkMode ? "text-white" : "text-black"} font-medium text-sm `}>
               {entry.payload.name}: Rp{Math.abs(entry.payload.value).toLocaleString()}
             </span>
           </li>
@@ -48,10 +46,6 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
       </ul>
     );
   };
-
-  // Debugging untuk melihat nilai-nilai
-  console.log("Chart Data:", chartData);
-  console.log("Filtered Chart Data:", filteredChartData);
 
   return (
     <div className="w-full lg:w-[60%]">
@@ -69,7 +63,7 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
               <Pie
                 data={filteredChartData}
                 cx="50%"
-                cy="50%"
+                cy="60%"
                 innerRadius={80}
                 outerRadius={110}
                 dataKey="value"
@@ -90,7 +84,7 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
                 className={`${darkMode ? "text-gray-300" : "text-gray-500"} text-sm font-medium`}
                 fill={darkMode ? "#D1D5DB" : "#6B7280"}
               >
-                Total Saldo
+                Sisa Saldo
               </text>
               <text
                 x="50%"

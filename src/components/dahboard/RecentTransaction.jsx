@@ -155,7 +155,7 @@ const RecentTransaction = ({
           )}
         </div>
 
-        {filteredTransactions.transactionFilterlength > maxVisibleTransactions && (
+        {filteredTransactions.length > maxVisibleTransactions && (
           <button
             onClick={toggleTransactions}
             className={`mt-3 ${
