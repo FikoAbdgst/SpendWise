@@ -484,7 +484,7 @@ const Expense = ({ darkMode }) => {
       <div className={`mb-4 p-4 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">Total Pengeluaran:</h2>
-          <p className="text-xl font-bold text-green-500">{formatCurrency(totalAmount)}</p>
+          <p className="text-xl font-bold text-red-500">{formatCurrency(totalAmount)}</p>
         </div>
       </div>
 
@@ -556,7 +556,7 @@ const Expense = ({ darkMode }) => {
                         <p className="font-medium">{expense.category}</p>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right text-green-500 font-medium">
+                    <td className="px-4 py-3 text-right text-red-500 font-medium">
                       {formatCurrency(expense.amount)}
                     </td>
                     <td className="px-4 py-3">
