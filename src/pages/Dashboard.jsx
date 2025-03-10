@@ -49,8 +49,7 @@ const Dashboard = ({ darkMode }) => {
         if (result.success) {
           setDashboardData(result.data);
 
-          // Tambahan: Fetch recent transactions
-          const transactionsResponse = await fetch(`${apiUrl}/api/transactions/recent`, {
+          const transactionsResponse = await fetch(`${apiUrl}/api/dashboard/transactions/recent`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
