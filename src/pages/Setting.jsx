@@ -219,7 +219,6 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         </h1>
       </div>
 
-      {/* Settings Navigation Tabs */}
       <div className={`mb-6 flex border-b ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
         <button
           onClick={() => setActiveTab("appearance")}
@@ -233,7 +232,7 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
               : "text-gray-500"
           }`}
         >
-          Appearance
+          Penampilan
         </button>
         {isLoggedIn && (
           <>
@@ -269,7 +268,6 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         )}
       </div>
 
-      {/* Content Section */}
       {activeTab === "appearance" && (
         <div
           className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
@@ -313,7 +311,7 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
       {isLoggedIn && activeTab === "profile" && (
         <div
-          className={`p-6 rounded-xl cursor-pointer shadow-md transition-colors duration-200 ${
+          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
             darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
           }`}
         >
