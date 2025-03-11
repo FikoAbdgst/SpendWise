@@ -295,7 +295,7 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
             <button
               onClick={toggleDarkMode}
-              className={`relative inline-flex h-6 w-18 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${
+              className={`relative inline-flex h-6 w-19 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${
                 darkMode ? "bg-purple-600" : "bg-gray-300"
               }`}
             >
