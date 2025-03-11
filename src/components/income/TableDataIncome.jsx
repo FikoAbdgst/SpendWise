@@ -13,42 +13,32 @@ const TableDataIncome = ({
   handleDelete,
   currentPage,
   setCurrentPage,
-  itemsPerPage = 10, // Default 10 items per page
+  itemsPerPage = 10,
 }) => {
-  // Log ketika filteredIncomes berubah
-  useEffect(() => {
-    console.log("Filtered incomes updated:", filteredIncomes);
-  }, [filteredIncomes]);
+  useEffect(() => {}, [filteredIncomes]);
 
-  // Pastikan nilai yang valid
   const safeCurrentPage = currentPage || 1;
   const safeItemsPerPage = itemsPerPage || 10;
 
-  // Menghitung total halaman - pastikan tidak nol
   const totalItems = Array.isArray(filteredIncomes) ? filteredIncomes.length : 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / safeItemsPerPage));
 
-  // Memotong data sesuai halaman saat ini
   const startIndex = (safeCurrentPage - 1) * safeItemsPerPage;
   const endIndex = Math.min(startIndex + safeItemsPerPage, totalItems);
 
-  // Pastikan data adalah array
   const safeData = Array.isArray(filteredIncomes) ? filteredIncomes : [];
   const currentPageData = safeData.slice(startIndex, endIndex);
 
-  // Fungsi untuk mengubah halaman
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Fungsi untuk halaman berikutnya
   const handleNextPage = () => {
     if (safeCurrentPage < totalPages) {
       setCurrentPage(safeCurrentPage + 1);
     }
   };
 
-  // Fungsi untuk halaman sebelumnya
   const handlePrevPage = () => {
     if (safeCurrentPage > 1) {
       setCurrentPage(safeCurrentPage - 1);

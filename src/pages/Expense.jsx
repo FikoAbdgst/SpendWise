@@ -505,7 +505,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex justify-center items-center p-4 border-t border-gray-200 dark:border-gray-700">
             <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
               Halaman {currentPage} dari {totalPages}
             </p>

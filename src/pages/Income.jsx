@@ -471,7 +471,7 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
                 setError(null);
                 fetchIncomes();
               }}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              className="mt-4 px-4 py-2 bg-blue-500 cursor-pointer text-white rounded-md hover:bg-blue-600"
             >
               Coba Lagi
             </button>
@@ -502,32 +502,10 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex justify-center items-center p-4 border-t border-gray-200 dark:border-gray-700">
             <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
               Halaman {currentPage} dari {totalPages}
             </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1 || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === 1 || loading ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                aria-label="Previous page"
-              >
-                Sebelumnya
-              </button>
-              <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === totalPages || loading ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                aria-label="Next page"
-              >
-                Selanjutnya
-              </button>
-            </div>
           </div>
         )}
       </div>
