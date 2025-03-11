@@ -490,18 +490,17 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         ) : (
           <TableDataExpense
             darkMode={darkMode}
-            expenses={filteredExpenses}
-            handleEdit={handleEdit}
-            handleDelete={(id) => {
-              setDeleteId(id);
-              setShowConfirmDelete(true);
-            }}
-            formatDate={formatDate}
-            formatCurrency={formatCurrency}
             handleSort={handleSort}
             sortColumn={sortColumn}
             sortDirection={sortDirection}
             filteredExpenses={filteredExpenses}
+            formatDate={formatDate}
+            formatCurrency={formatCurrency}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            itemsPerPage={10}
           />
         )}
 
@@ -510,28 +509,6 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
               Halaman {currentPage} dari {totalPages}
             </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1 || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === 1 || loading ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                aria-label="Previous page"
-              >
-                Sebelumnya
-              </button>
-              <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === totalPages || loading ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
-                aria-label="Next page"
-              >
-                Selanjutnya
-              </button>
-            </div>
           </div>
         )}
       </div>

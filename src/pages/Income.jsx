@@ -487,18 +487,17 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         ) : (
           <TableDataIncome
             darkMode={darkMode}
-            incomes={filteredIncomes}
-            handleEdit={handleEdit}
-            handleDelete={(id) => {
-              setDeleteId(id);
-              setShowConfirmDelete(true);
-            }}
-            formatDate={formatDate}
-            formatCurrency={formatCurrency}
             handleSort={handleSort}
             sortColumn={sortColumn}
             sortDirection={sortDirection}
             filteredIncomes={filteredIncomes}
+            formatDate={formatDate}
+            formatCurrency={formatCurrency}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            itemsPerPage={10}
           />
         )}
 
