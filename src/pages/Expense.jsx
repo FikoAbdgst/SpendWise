@@ -32,7 +32,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     date: new Date(),
     icon: "💸",
     amountNumeric: 0,
-    category: ""
+    category: "",
   });
 
   const apiUrl =
@@ -69,7 +69,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       }
 
       // Always sort by created_at desc regardless of UI sort selection
-      const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`
+      const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -181,14 +181,11 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         return;
       }
 
-      const url = editMode
-        ? `${apiUrl}/api/expenses/${editId}`
-        : `${apiUrl}/api/expenses`
+      const url = editMode ? `${apiUrl}/api/expenses/${editId}` : `${apiUrl}/api/expenses`;
 
       // Set the time to noon to avoid timezone issues
-      const dateObj = formData.date instanceof Date
-        ? new Date(formData.date)
-        : new Date(formData.date);
+      const dateObj =
+        formData.date instanceof Date ? new Date(formData.date) : new Date(formData.date);
 
       // Set time to 12:00:00 to prevent date shift due to timezone
       dateObj.setHours(12, 0, 0, 0);
@@ -220,7 +217,9 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       const result = await response.json();
 
       if (result.success) {
-        toast.success(editMode ? "Pengeluaran berhasil diperbarui!" : "Pengeluaran berhasil ditambahkan!");
+        toast.success(
+          editMode ? "Pengeluaran berhasil diperbarui!" : "Pengeluaran berhasil ditambahkan!"
+        );
         resetForm();
         fetchExpenses();
       } else {
@@ -242,7 +241,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       date: new Date(),
       icon: "💸",
       amountNumeric: 0,
-      category: ""
+      category: "",
     });
     setSelectedIcon("💸");
     setShowForm(false);
@@ -346,8 +345,9 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         <div className="flex items-center justify-center mb-5 md:mb-0 relative">
           {isLoggedIn && (
             <button
-              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${darkMode ? "text-gray-600 border-gray-700" : "text-gray-500 border-gray-300"
-                } transition-colors duration-200`}
+              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${
+                darkMode ? "text-gray-600 border-gray-700" : "text-gray-500 border-gray-300"
+              } transition-colors duration-200`}
               onClick={toggleMobileMenu}
               aria-label="Toggle Menu"
             >
@@ -381,18 +381,20 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               placeholder="Cari pengeluaran..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
-                }`}
+              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
+                darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
+              }`}
               aria-label="Search expenses"
             />
           </div>
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${darkMode
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-              }`}
+            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${
+              darkMode
+                ? "bg-purple-600 text-white hover:bg-purple-700"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
             aria-label="Add new expense"
           >
             <FaPlus />
@@ -420,19 +422,23 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
-            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${darkMode ? "bg-gray-800" : "bg-white"
-              }`}
+            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            }`}
             role="dialog"
             aria-labelledby="delete-dialog-title"
           >
-            <h2 id="delete-dialog-title" className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <h2 id="delete-dialog-title" className="text-xl font-bold mb-4">
+              Konfirmasi Hapus
+            </h2>
             <p className="mb-6">Apakah Anda yakin ingin menghapus pengeluaran ini?</p>
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 rounded-md cursor-pointer ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                  }`}
+                className={`px-4 py-2 rounded-md cursor-pointer ${
+                  darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                }`}
               >
                 Batal
               </button>
@@ -475,7 +481,11 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
           </div>
         ) : filteredExpenses.length === 0 ? (
           <div className="p-6 text-center">
-            <p>{searchQuery ? "Tidak ada hasil yang cocok dengan pencarian Anda." : "Belum ada data pengeluaran."}</p>
+            <p>
+              {searchQuery
+                ? "Tidak ada hasil yang cocok dengan pencarian Anda."
+                : "Belum ada data pengeluaran."}
+            </p>
           </div>
         ) : (
           <TableDataExpense
@@ -504,8 +514,9 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1 || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${currentPage === 1 || loading ? "opacity-50 cursor-not-allowed" : ""
-                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                className={`px-3 py-1 rounded-md cursor-pointer ${
+                  currentPage === 1 || loading ? "opacity-50 cursor-not-allowed" : ""
+                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
                 aria-label="Previous page"
               >
                 Sebelumnya
@@ -513,8 +524,9 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages || loading}
-                className={`px-3 py-1 rounded-md cursor-pointer ${currentPage === totalPages || loading ? "opacity-50 cursor-not-allowed" : ""
-                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                className={`px-3 py-1 rounded-md cursor-pointer ${
+                  currentPage === totalPages || loading ? "opacity-50 cursor-not-allowed" : ""
+                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
                 aria-label="Next page"
               >
                 Selanjutnya
