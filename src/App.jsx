@@ -95,7 +95,18 @@ function App() {
 
   return (
     <Router>
-      <ToastContainer />
+      <ToastContainer
+        limit={3} // Batasi hanya 3 toast yang muncul bersamaan
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className={`flex h-screen overflow-hidden ${darkMode ? "dark" : ""}`}>
         {/* Sidebar for desktop */}
         {isLoggedIn && (
@@ -112,9 +123,8 @@ function App() {
         {/* Mobile sidebar (will slide in) */}
         {isLoggedIn && (
           <div
-            className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform sidebar-container ${
-              isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
+            className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 transition-transform duration-300 transform sidebar-container ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
           >
             <Sidebar
               username={username}
@@ -134,13 +144,12 @@ function App() {
 
         {/* Main content */}
         <div
-          className={`flex-1 overflow-auto ${
-            darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"
-          } transition-colors duration-200`}
+          className={`flex-1 overflow-auto ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"
+            } transition-colors duration-200`}
         >
           {/* Mobile menu toggle button */}
 
-          <div className={`p-3 md:p-6 ${isLoggedIn ? "md:ml-0 pt-3" : ""}`}>
+          <div className={` ${isLoggedIn ? "md:ml-0 pt-3" : ""}`}>
             <Routes>
               <Route
                 path="/login"

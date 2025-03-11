@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = ({ darkMode }) => {
   const [formData, setFormData] = useState({
@@ -15,8 +16,6 @@ const Register = ({ darkMode }) => {
     password: "",
     confirmPassword: "",
   });
-  const [generalError, setGeneralError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -88,7 +87,6 @@ const Register = ({ darkMode }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setGeneralError("");
     // Reset field errors
     setFieldErrors({
       full_name: "",
@@ -142,7 +140,15 @@ const Register = ({ darkMode }) => {
         return;
       }
 
-      setSuccess("Registrasi berhasil! Silahkan login.");
+      // Show success toast
+      toast.success("Registrasi berhasil! Silahkan login.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
 
       // Redirect ke halaman login setelah 2 detik
       setTimeout(() => {
@@ -156,7 +162,15 @@ const Register = ({ darkMode }) => {
           email: err.message
         });
       } else {
-        setGeneralError(err.message || "Terjadi kesalahan saat registrasi");
+        // Show error toast for general errors
+        toast.error(err.message || "Terjadi kesalahan saat registrasi", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
       }
     } finally {
       setLoading(false);
@@ -167,9 +181,6 @@ const Register = ({ darkMode }) => {
     <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
       <div className={`${darkMode ? "bg-gray-800" : "bg-white"} p-8 rounded shadow-md w-96`}>
         <h2 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-gray-800"}`}>Register</h2>
-
-        {generalError && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{generalError}</div>}
-        {success && <div className="bg-green-100 text-green-700 p-3 rounded mb-4">{success}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

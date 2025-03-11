@@ -103,7 +103,7 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     : filteredTransactions.slice(0, maxVisibleTransactions);
 
   return (
-    <div className="w-full h-screen p-3">
+    <div className="w-full h-screen p-5">
       <div className="flex items-center justify-center mb-5 relative">
         {isLoggedIn && (
           <button

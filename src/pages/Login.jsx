@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -17,6 +17,7 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
       [name]: value,
     });
   };
+
   const API_URL =
     process.env.NODE_ENV === "production"
       ? "https://backend-spendwise.vercel.app"
@@ -28,13 +29,19 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
 
     // Validasi input
     if (!email || !password) {
-      setError("Email dan password harus diisi");
+      toast.error("Email dan password harus diisi", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
       return;
     }
 
     try {
       setLoading(true);
-      setError("");
 
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
@@ -58,10 +65,28 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
       setIsLoggedIn(true);
       setUsername(data.user.full_name || data.user.email);
 
+      // Show success toast
+      toast.success("Login berhasil!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+
       // Redirect ke halaman utama
       navigate("/");
     } catch (err) {
-      setError(err.message || "Terjadi kesalahan saat login");
+      // Show error toast
+      toast.error(err.message || "Terjadi kesalahan saat login", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
     } finally {
       setLoading(false);
     }
@@ -71,8 +96,6 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
     <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
       <div className={`${darkMode ? "bg-gray-800" : "bg-white"} p-8 rounded shadow-md w-96`}>
         <h2 className={`text-2xl font-bold mb-6 text-center ${darkMode ? "text-white" : "text-gray-800"}`}>Login</h2>
-
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

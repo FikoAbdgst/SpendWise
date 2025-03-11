@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaSave, FaTimes, FaTrash, FaEdit, FaSearch } from "react-icons/fa";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import IconSelector from "../components/IconSelector";
+import { toast } from "react-toastify";
+import FormInputExpense from "../components/expense/FormInputExpense";
+import TableDataExpense from "../components/expense/TableDataExpense";
 
 const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [showForm, setShowForm] = useState(false);
@@ -11,7 +12,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState("💰");
+  const [selectedIcon, setSelectedIcon] = useState("💸");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,15 +22,17 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [showIconSelector, setShowIconSelector] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [sortColumn, setSortColumn] = useState("date");
+
+  // Set default sort to created_at in descending order (newest first)
+  const [sortColumn, setSortColumn] = useState("created_at");
   const [sortDirection, setSortDirection] = useState("desc");
-  const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
   const [formData, setFormData] = useState({
-    category: "",
     amount: "",
     date: new Date(),
-    icon: "💰",
+    icon: "💸",
+    amountNumeric: 0,
+    category: ""
   });
 
   const apiUrl =
@@ -37,16 +40,21 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
 
+  // Fetch expenses whenever page, sort column, or sort direction changes
   useEffect(() => {
-    fetchExpenses();
-  }, [currentPage, sortColumn, sortDirection]);
+    if (isLoggedIn) {
+      fetchExpenses();
+    }
+  }, [currentPage, sortColumn, sortDirection, isLoggedIn]);
 
+  // Filter expenses when search query or expenses change
   useEffect(() => {
     filterExpenses();
   }, [searchQuery, expenses]);
 
+  // Calculate total amount when filtered expenses change
   useEffect(() => {
-    const total = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
+    const total = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0);
     setTotalAmount(total);
   }, [filteredExpenses]);
 
@@ -54,24 +62,34 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
+      if (!token) {
+        setError("No authentication token found. Please log in.");
+        setLoading(false);
+        return;
+      }
 
-      const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`;
-      console.log("Fetching URL:", url);
+      // Always sort by created_at desc regardless of UI sort selection
+      const url = `${apiUrl}/api/expenses?page=${currentPage}&limit=${itemsPerPage}&sort=${sortColumn}&order=${sortDirection}`
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
       const result = await response.json();
-      console.log("API Response:", result);
 
       if (result.success) {
         const allData = result.data || [];
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const paginatedData = allData.slice(startIndex, startIndex + itemsPerPage);
-        setExpenses(paginatedData);
-        setTotalPages(Math.ceil(allData.length / itemsPerPage));
+        setExpenses(allData);
+
+        // Calculate total pages based on the total count from the API
+        const totalCount = result.totalCount || allData.length;
+        setTotalPages(Math.ceil(totalCount / itemsPerPage));
+      } else {
+        setError(result.message || "Failed to fetch expenses");
       }
     } catch (error) {
       setError("Error fetching expenses. Please try again.");
@@ -90,20 +108,26 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     const query = searchQuery.toLowerCase();
     const filtered = expenses.filter(
       (expense) =>
-        expense.category.toLowerCase().includes(query) || expense.amount.toString().includes(query)
+        expense.description?.toLowerCase().includes(query) ||
+        expense.amount?.toString().includes(query) ||
+        expense.category?.toLowerCase().includes(query)
     );
 
     setFilteredExpenses(filtered);
   };
 
   const formatNumberWithDots = (value) => {
-    const numericValue = value.replace(/\D/g, "");
-
+    if (!value) return "";
+    // Remove non-numeric characters except for digits
+    const numericValue = value.toString().replace(/[^\d]/g, "");
+    // Add dots for thousands separator
     return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
   const parseFormattedNumber = (formattedValue) => {
-    return formattedValue.replace(/\./g, "");
+    if (!formattedValue) return 0;
+    // Remove dots and convert to number
+    return Number(formattedValue.toString().replace(/\./g, "")) || 0;
   };
 
   const handleInputChange = (e) => {
@@ -136,22 +160,48 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Form validation
+    if (!formData.amountNumeric || formData.amountNumeric <= 0) {
+      toast.error("Jumlah harus diisi dengan nilai yang valid");
+      return;
+    }
+
+    if (!formData.category.trim()) {
+      toast.error("Kategori pengeluaran tidak boleh kosong");
+      return;
+    }
+
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const url = editMode ? `${apiUrl}/api/expenses/${editId}` : `${apiUrl}/api/expenses`;
 
-      const formattedDate =
-        formData.date instanceof Date
-          ? formData.date.toISOString().split("T")[0]
-          : new Date(formData.date).toISOString().split("T")[0];
+      if (!token) {
+        toast.error("Sesi login telah berakhir. Silakan login kembali.");
+        setLoading(false);
+        return;
+      }
 
-      console.log("Data yang akan dikirim:", {
-        category: formData.category,
+      const url = editMode
+        ? `${apiUrl}/api/expenses/${editId}`
+        : `${apiUrl}/api/expenses`
+
+      // Set the time to noon to avoid timezone issues
+      const dateObj = formData.date instanceof Date
+        ? new Date(formData.date)
+        : new Date(formData.date);
+
+      // Set time to 12:00:00 to prevent date shift due to timezone
+      dateObj.setHours(12, 0, 0, 0);
+
+      const formattedDate = dateObj.toISOString().split("T")[0];
+
+      const dataToSend = {
         amount: formData.amountNumeric,
         date: formattedDate,
         icon: formData.icon,
-      });
+        category: formData.category,
+        // Don't send created_at field when updating - server should preserve it
+      };
 
       const response = await fetch(url, {
         method: editMode ? "PUT" : "POST",
@@ -159,42 +209,28 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          category: formData.category,
-          amount: formData.amountNumeric,
-          date: formattedDate,
-          icon: formData.icon,
-        }),
+        body: JSON.stringify(dataToSend),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Server responded with status: ${response.status}`);
+      }
+
       const result = await response.json();
-      console.log("Response dari server:", result);
 
       if (result.success) {
-        setNotification({
-          show: true,
-          message: editMode ? "Pengeluaran berhasil diperbarui!" : "Pengeluaran berhasil ditambahkan!",
-          type: "success",
-        });
-
+        toast.success(editMode ? "Pengeluaran berhasil diperbarui!" : "Pengeluaran berhasil ditambahkan!");
         resetForm();
         fetchExpenses();
       } else {
         setError(result.message || "Failed to save expense");
-        setNotification({
-          show: true,
-          message: `Gagal menyimpan pengeluaran: ${result.message}`,
-          type: "error",
-        });
+        toast.error(`Gagal menyimpan pengeluaran: ${result.message}`);
       }
     } catch (error) {
       setError("Error saving expense. Please try again.");
       console.error("Error saving expense:", error);
-      setNotification({
-        show: true,
-        message: "Terjadi kesalahan. Silakan coba lagi.",
-        type: "error",
-      });
+      toast.error("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -202,12 +238,13 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
 
   const resetForm = () => {
     setFormData({
-      category: "",
       amount: "",
       date: new Date(),
-      icon: "💰",
+      icon: "💸",
+      amountNumeric: 0,
+      category: ""
     });
-    setSelectedIcon("💰");
+    setSelectedIcon("💸");
     setShowForm(false);
     setEditMode(false);
     setEditId(null);
@@ -215,15 +252,16 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
 
   const handleEdit = (expense) => {
     // Format the amount to remove the decimal places
-    const formattedAmount = formatNumberWithDots(String(Math.round(expense.amount)));
+    const formattedAmount = formatNumberWithDots(String(Math.round(expense.amount || 0)));
 
     setFormData({
-      source: expense.source,
       amount: formattedAmount,
+      amountNumeric: parseFloat(expense.amount || 0),
       date: new Date(expense.date),
-      icon: expense.icon || "💰",
+      icon: expense.icon || "💸",
+      category: expense.category || "",
     });
-    setSelectedIcon(expense.icon || "💰");
+    setSelectedIcon(expense.icon || "💸");
     setEditMode(true);
     setEditId(expense.id);
     setShowForm(true);
@@ -235,57 +273,63 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        toast.error("Sesi login telah berakhir. Silakan login kembali.");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch(`${apiUrl}/api/expenses/${deleteId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Server responded with status: ${response.status}`);
+      }
 
       const result = await response.json();
 
       if (result.success) {
-        setNotification({
-          show: true,
-          message: "Pengeluaran berhasil dihapus!",
-          type: "success",
-        });
-
+        toast.success("Pengeluaran berhasil dihapus!");
+        setShowConfirmDelete(false);
         fetchExpenses();
       } else {
         setError(result.message || "Failed to delete expense");
-        setNotification({
-          show: true,
-          message: "Gagal menghapus pengeluaran.",
-          type: "error",
-        });
+        toast.error("Gagal menghapus pengeluaran.");
       }
     } catch (error) {
       setError("Error deleting expense. Please try again.");
       console.error("Error deleting expense:", error);
-      setNotification({
-        show: true,
-        message: "Terjadi kesalahan. Silakan coba lagi.",
-        type: "error",
-      });
+      toast.error("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setLoading(false);
-      setShowConfirmDelete(false);
       setDeleteId(null);
     }
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
+    if (!dateString) return "-";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return dateString;
+    }
   };
 
   const formatCurrency = (amount) => {
+    if (amount === undefined || amount === null) return "Rp0";
     return `Rp${Math.round(amount).toLocaleString("id-ID")}`;
   };
 
+  // This function is kept for UI interaction but doesn't affect actual API sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -293,28 +337,19 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       setSortColumn(column);
       setSortDirection("asc");
     }
+    // No need to make API call with sorting changes since we always sort by created_at
   };
 
-  useEffect(() => {
-    if (notification.show) {
-      const timer = setTimeout(() => {
-        setNotification({ ...notification, show: false });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
-
   return (
-    <div className={`w-full min-h-screen p-3 ${darkMode ? "text-white" : "text-gray-800"}`}>
+    <div className={`w-full min-h-screen p-6 ${darkMode ? "text-white" : "text-gray-800"}`}>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <div className="flex items-center justify-center mb-5 md:mb-0 relative">
           {isLoggedIn && (
             <button
-              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${
-                darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${darkMode ? "text-gray-600 border-gray-700" : "text-gray-500 border-gray-300"
+                } transition-colors duration-200`}
               onClick={toggleMobileMenu}
+              aria-label="Toggle Menu"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -333,7 +368,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             </button>
           )}
 
-          <h1 className="text-2xl font-bold ">Kelola Pemasukan</h1>
+          <h1 className="text-2xl font-bold">Kelola Pengeluaran</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -346,19 +381,19 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               placeholder="Cari pengeluaran..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
-                darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
-              }`}
+              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
+                }`}
+              aria-label="Search expenses"
             />
           </div>
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
-              darkMode
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
+            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${darkMode
+              ? "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
+            aria-label="Add new expense"
           >
             <FaPlus />
             <span>Tambah Pengeluaran</span>
@@ -366,164 +401,45 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         </div>
       </div>
 
-      {notification.show && (
-        <div
-          className={`fixed top-5 right-5 z-50 p-4 rounded-md shadow-md ${
-            notification.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
-          }`}
-        >
-          {notification.message}
-        </div>
-      )}
-
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
-          <div
-            className={`w-full max-w-2xl rounded-lg shadow-lg p-6 ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">
-                {editMode ? "Edit Pengeluaran" : "Tambah Pengeluaran Baru"}
-              </h2>
-              <button
-                onClick={resetForm}
-                className={`p-2 rounded-full cursor-pointer hover:bg-opacity-10 ${
-                  darkMode ? "hover:bg-gray-600" : "hover:bg-gray-200"
-                }`}
-              >
-                <FaTimes />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Icon</label>
-                  <button
-                    type="button"
-                    onClick={() => setShowIconSelector(!showIconSelector)}
-                    className={`w-full cursor-pointer flex items-center justify-between px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 hover:bg-gray-600"
-                        : "bg-white border border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    <span className="text-2xl">{selectedIcon}</span>
-                    <span>Pilih Icon</span>
-                  </button>
-                  {showIconSelector && (
-                    <div className="mt-2">
-                      <IconSelector onSelectIcon={handleIconSelect} darkMode={darkMode} />
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Sumber Pengeluaran</label>
-                  <input
-                    type="text"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    required
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
-                    placeholder="Belanja, Transportasi, dll"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Jumlah (Rp)</label>
-                  <input
-                    type="text"
-                    name="amount"
-                    min={0}
-                    value={formData.amount}
-                    onChange={handleInputChange}
-                    required
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">Tanggal</label>
-                  <DatePicker
-                    selected={formData.date}
-                    onChange={handleDateChange}
-                    dateFormat="dd/MM/yyyy"
-                    className={`w-full px-4 py-2 rounded-md ${
-                      darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-gray-800 border border-gray-300"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className={`px-4 py-2 cursor-pointer rounded-md ${
-                    darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                  }`}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 rounded-md ${
-                    darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
-                  } text-white`}
-                >
-                  {loading ? (
-                    "Menyimpan..."
-                  ) : (
-                    <>
-                      <FaSave />
-                      <span>Simpan</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <FormInputExpense
+        showForm={showForm}
+        darkMode={darkMode}
+        editMode={editMode}
+        resetForm={resetForm}
+        handleSubmit={handleSubmit}
+        setShowIconSelector={setShowIconSelector}
+        showIconSelector={showIconSelector}
+        selectedIcon={selectedIcon}
+        handleIconSelect={handleIconSelect}
+        handleInputChange={handleInputChange}
+        formData={formData}
+        handleDateChange={handleDateChange}
+        loading={loading}
+      />
 
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
-            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
+            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${darkMode ? "bg-gray-800" : "bg-white"
+              }`}
+            role="dialog"
+            aria-labelledby="delete-dialog-title"
           >
-            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <h2 id="delete-dialog-title" className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
             <p className="mb-6">Apakah Anda yakin ingin menghapus pengeluaran ini?</p>
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 cursor-pointer rounded-md ${
-                  darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                }`}
+                className={`px-4 py-2 rounded-md cursor-pointer ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                  }`}
               >
                 Batal
               </button>
               <button
                 onClick={handleDelete}
                 disabled={loading}
-                className="px-4 py-2 bg-red-500 text-white cursor-pointer rounded-md hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded-md cursor-pointer hover:bg-red-600 disabled:opacity-50"
               >
                 {loading ? "Menghapus..." : "Hapus"}
               </button>
@@ -547,99 +463,36 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         ) : error ? (
           <div className="p-6 text-center text-red-500">
             <p>{error}</p>
+            <button
+              onClick={() => {
+                setError(null);
+                fetchExpenses();
+              }}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Coba Lagi
+            </button>
           </div>
         ) : filteredExpenses.length === 0 ? (
           <div className="p-6 text-center">
-            <p>Belum ada data pengeluaran.</p>
+            <p>{searchQuery ? "Tidak ada hasil yang cocok dengan pencarian Anda." : "Belum ada data pengeluaran."}</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className={darkMode ? "bg-gray-700" : "bg-gray-50"}>
-                <tr>
-                  <th
-                    className="px-4 py-3 text-left cursor-pointer"
-                    onClick={() => handleSort("date")}
-                  >
-                    <div className="flex items-center">
-                      <span>Tanggal</span>
-                    </div>
-                  </th>
-                  <th
-                    className="px-4 py-3 text-left cursor-pointer"
-                    onClick={() => handleSort("category")}
-                  >
-                    <div className="flex items-center">
-                      <span>Sumber</span>
-                      {sortColumn === "category" && (
-                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th
-                    className="px-4 py-3 text-right cursor-pointer"
-                    onClick={() => handleSort("amount")}
-                  >
-                    <div className="flex items-center justify-end">
-                      <span>Jumlah</span>
-                      {sortColumn === "amount" && (
-                        <span className="ml-1">{sortDirection === "asc" ? "↑" : "↓"}</span>
-                      )}
-                    </div>
-                  </th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredExpenses.map((expense) => (
-                  <tr
-                    key={expense.id}
-                    className={darkMode ? "border-t border-gray-700" : "border-t border-gray-200"}
-                  >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center">
-                        <span className="text-xl mr-2">{expense.icon || "💰"}</span>
-                        <span>{formatDate(expense.date)}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div>
-                        <p className="font-medium">{expense.category}</p>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-right text-red-500 font-medium">
-                      {formatCurrency(expense.amount)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() => handleEdit(expense)}
-                          className={`p-2 rounded-full cursor-pointer ${
-                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
-                          title="Edit"
-                        >
-                          <FaEdit className={darkMode ? "text-blue-400" : "text-blue-500"} />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setDeleteId(expense.id);
-                            setShowConfirmDelete(true);
-                          }}
-                          className={`p-2 rounded-full cursor-pointer ${
-                            darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
-                          title="Hapus"
-                        >
-                          <FaTrash className={darkMode ? "text-red-400" : "text-red-500"} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <TableDataExpense
+            darkMode={darkMode}
+            expenses={filteredExpenses}
+            handleEdit={handleEdit}
+            handleDelete={(id) => {
+              setDeleteId(id);
+              setShowConfirmDelete(true);
+            }}
+            formatDate={formatDate}
+            formatCurrency={formatCurrency}
+            handleSort={handleSort}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            filteredExpenses={filteredExpenses}
+          />
         )}
 
         {totalPages > 1 && (
@@ -650,19 +503,19 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             <div className="flex gap-2">
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                disabled={currentPage === 1 || loading}
+                className={`px-3 py-1 rounded-md cursor-pointer ${currentPage === 1 || loading ? "opacity-50 cursor-not-allowed" : ""
+                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                aria-label="Previous page"
               >
                 Sebelumnya
               </button>
               <button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded-md cursor-pointer ${
-                  currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                disabled={currentPage === totalPages || loading}
+                className={`px-3 py-1 rounded-md cursor-pointer ${currentPage === totalPages || loading ? "opacity-50 cursor-not-allowed" : ""
+                  } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+                aria-label="Next page"
               >
                 Selanjutnya
               </button>
