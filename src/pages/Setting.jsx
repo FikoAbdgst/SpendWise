@@ -156,8 +156,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
       const response = await axios.put(
         `${apiUrl}/api/auth/update-password`,
         {
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword,
+          current_password: passwordData.currentPassword,
+          new_password: passwordData.newPassword,
+          confirm_password: passwordData.confirmPassword,
         },
         {
           headers: {
@@ -379,7 +380,7 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${
+              className={`flex items-center cursor-pointer justify-center py-2 px-6 rounded-md font-medium transition-colors ${
                 darkMode
                   ? "bg-purple-600 hover:bg-purple-700 text-white"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
@@ -516,14 +517,14 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${
+              className={`flex cursor-pointer items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${
                 darkMode
                   ? "bg-purple-600 hover:bg-purple-700 text-white"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
               }`}
             >
               {loading ? (
-                <span className="animate-pulse">Updating...</span>
+                <span className="animate-pulse">Memperbarui...</span>
               ) : (
                 <>
                   <FiLock className="mr-2" /> Update Password
