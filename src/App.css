@@ -1,18 +1,29 @@
- /* Custom Scrollbar Styles */
- .custom-scrollbar::-webkit-scrollbar {
-     width: 8px;
- }
+/* Untuk mendukung scrollbar di perangkat mobile */
+.scrollbar-show {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #a855f7 transparent;
+}
 
- .custom-scrollbar::-webkit-scrollbar-track {
-     background: #f1f1f1;
-     border-radius: 10px;
- }
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
 
- .custom-scrollbar::-webkit-scrollbar-thumb {
-     background: #a855f7;
-     border-radius: 10px;
- }
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
 
- .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-     background: #9333ea;
- }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a855f7;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9333ea;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    background: transparent;
+}
