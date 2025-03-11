@@ -342,9 +342,8 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         <div className="flex items-center justify-center mb-5 md:mb-0 relative">
           {isLoggedIn && (
             <button
-              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${
-                darkMode ? "text-gray-600 border-gray-700" : "text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+              className={`md:hidden absolute -left-18 p-2 rounded-md bg-transparent border ${darkMode ? "text-gray-600 border-gray-700" : "text-gray-500 border-gray-300"
+                } transition-colors duration-200`}
               onClick={toggleMobileMenu}
               aria-label="Toggle Menu"
             >
@@ -378,20 +377,18 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               placeholder="Cari pemasukan..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${
-                darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
-              }`}
+              className={`pl-10 pr-4 py-2 rounded-md w-full sm:w-64 outline-none ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800 border border-gray-300"
+                }`}
               aria-label="Search incomes"
             />
           </div>
 
           <button
             onClick={() => setShowForm(true)}
-            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${
-              darkMode
+            className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${darkMode
                 ? "bg-purple-600 text-white hover:bg-purple-700"
                 : "bg-blue-500 text-white hover:bg-blue-600"
-            }`}
+              }`}
             aria-label="Add new income"
           >
             <FaPlus />
@@ -419,9 +416,8 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       {showConfirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 p-4">
           <div
-            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
+            className={`w-full max-w-md rounded-lg shadow-lg p-6 ${darkMode ? "bg-gray-800" : "bg-white"
+              }`}
             role="dialog"
             aria-labelledby="delete-dialog-title"
           >
@@ -433,9 +429,8 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className={`px-4 py-2 rounded-md cursor-pointer ${
-                  darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                }`}
+                className={`px-4 py-2 rounded-md cursor-pointer ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                  }`}
               >
                 Batal
               </button>
@@ -494,7 +489,10 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
             formatDate={formatDate}
             formatCurrency={formatCurrency}
             handleEdit={handleEdit}
-            handleDelete={handleDelete}
+            handleDelete={(id) => {
+              setDeleteId(id);
+              setShowConfirmDelete(true);
+            }}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             itemsPerPage={10}
