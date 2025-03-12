@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiBarChart2, FiTrendingUp, FiTrendingDown, FiSettings, FiLogOut } from "react-icons/fi";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
 
 const Sidebar = ({ setIsLoggedIn, darkMode, toggleMobileMenu }) => {
   const navigate = useNavigate();
@@ -35,13 +36,10 @@ const Sidebar = ({ setIsLoggedIn, darkMode, toggleMobileMenu }) => {
         darkMode ? "border-gray-700" : "border-gray-200"
       } transition-colors duration-200`}
     >
-      {/* Logo */}
       <div className="px-4 md:px-6 py-4 md:py-6">
         <div className="flex justify-start items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="w-12 h-12 rounded-full" />
-          <h
-            className={`text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent`}
-          >
+          <FaMoneyBillTrendUp className="w-8 h-8 text-blue-500" />
+          <h className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             SpendTvise
           </h>
         </div>
