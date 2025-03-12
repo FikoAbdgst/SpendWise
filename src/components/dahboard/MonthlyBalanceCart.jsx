@@ -18,7 +18,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
   const [chartData, setChartData] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
 
   // Refs for dropdown menus to handle clickOutside
   const periodDropdownRef = useRef(null);
@@ -35,10 +37,10 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
       setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -224,10 +226,11 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
     if (active && payload && payload.length) {
       return (
         <div
-          className={`p-2 sm:p-4 border rounded shadow-lg text-xs sm:text-sm ${darkMode
-            ? "bg-gray-800 text-white border-gray-700"
-            : "bg-white text-gray-800 border-gray-200"
-            }`}
+          className={`p-2 sm:p-4 border rounded shadow-lg text-xs sm:text-sm ${
+            darkMode
+              ? "bg-gray-800 text-white border-gray-700"
+              : "bg-white text-gray-800 border-gray-200"
+          }`}
         >
           <p className="font-semibold">{label}</p>
           {(dataType === "all" || dataType === "income") && (
@@ -248,10 +251,11 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
           )}
           {(dataType === "all" || dataType === "balance") && (
             <p
-              className={`font-semibold ${(payload.find((p) => p.dataKey === "balance")?.value || 0) >= 0
-                ? "text-blue-500"
-                : "text-orange-500"
-                }`}
+              className={`font-semibold ${
+                (payload.find((p) => p.dataKey === "balance")?.value || 0) >= 0
+                  ? "text-blue-500"
+                  : "text-orange-500"
+              }`}
             >
               Saldo: Rp.
               {Math.round(payload.find((p) => p.dataKey === "balance")?.value || 0).toLocaleString(
@@ -268,9 +272,7 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
   // Format label to show in rupiah
   const formatRupiah = (value) => {
     // For small screens, use a more compact format
-    return windowWidth < 640
-      ? `Rp${Math.round(value / 1000)}K`
-      : `Rp.${Math.round(value / 1000)}K`;
+    return windowWidth < 640 ? `Rp${Math.round(value / 1000)}K` : `Rp.${Math.round(value / 1000)}K`;
   };
 
   // Calculate optimal bar size based on screen width and number of data points
@@ -285,8 +287,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
 
   return (
     <div
-      className={`w-full rounded-lg ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-        } shadow p-3 sm:p-5`}
+      className={`w-full rounded-lg ${
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+      } shadow p-3 sm:p-5`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
         <h2 className="text-lg sm:text-xl font-bold">Grafik Keuangan</h2>
@@ -295,10 +298,11 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
           {/* Period Filter Dropdown */}
           <div className="relative" ref={periodDropdownRef}>
             <button
-              className={`px-2 py-1 sm:px-3 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${darkMode
-                ? "bg-gray-700 hover:bg-gray-600 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-                }`}
+              className={`px-2 py-1 sm:px-3 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${
+                darkMode
+                  ? "bg-gray-700 hover:bg-gray-600 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+              }`}
               onClick={() => setDropdownOpen(!dropdownOpen)}
               aria-label="Toggle period filter"
               aria-expanded={dropdownOpen}
@@ -306,8 +310,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
               <span>Periode: {getPeriodLabel()}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""
-                  }`}
+                className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-200 ${
+                  dropdownOpen ? "rotate-180" : ""
+                }`}
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -320,13 +325,15 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
             </button>
             {dropdownOpen && (
               <div
-                className={`absolute right-0 mt-1 sm:mt-2 w-32 sm:w-40 rounded-md shadow-lg z-10 ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800"
-                  }`}
+                className={`absolute right-0 mt-1 sm:mt-2 w-32 sm:w-40 rounded-md shadow-lg z-10 ${
+                  darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800"
+                }`}
               >
                 <div className="py-1">
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${period === "daily" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${period === "daily" ? "font-bold" : ""}`}
                     onClick={() => {
                       setPeriod("daily");
                       setDropdownOpen(false);
@@ -335,8 +342,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                     Harian
                   </button>
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${period === "weekly" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${period === "weekly" ? "font-bold" : ""}`}
                     onClick={() => {
                       setPeriod("weekly");
                       setDropdownOpen(false);
@@ -345,8 +353,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                     Mingguan
                   </button>
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${period === "monthly" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${period === "monthly" ? "font-bold" : ""}`}
                     onClick={() => {
                       setPeriod("monthly");
                       setDropdownOpen(false);
@@ -362,10 +371,11 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
           {/* Data Type Filter Dropdown */}
           <div className="relative" ref={typeDropdownRef}>
             <button
-              className={`px-2 py-1 sm:px-3 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${darkMode
-                ? "bg-gray-700 hover:bg-gray-600 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-                }`}
+              className={`px-2 py-1 sm:px-3 sm:py-2 rounded-md flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${
+                darkMode
+                  ? "bg-gray-700 hover:bg-gray-600 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+              }`}
               onClick={() => setTypeDropdownOpen(!typeDropdownOpen)}
               aria-label="Toggle data type filter"
               aria-expanded={typeDropdownOpen}
@@ -373,8 +383,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
               <span>Data: {getDataTypeLabel()}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-200 ${typeDropdownOpen ? "rotate-180" : ""
-                  }`}
+                className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-200 ${
+                  typeDropdownOpen ? "rotate-180" : ""
+                }`}
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -387,13 +398,15 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
             </button>
             {typeDropdownOpen && (
               <div
-                className={`absolute right-0 mt-1 sm:mt-2 w-32 sm:w-40 rounded-md shadow-lg z-10 ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800"
-                  }`}
+                className={`absolute right-0 mt-1 sm:mt-2 w-32 sm:w-40 rounded-md shadow-lg z-10 ${
+                  darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800"
+                }`}
               >
                 <div className="py-1">
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${dataType === "all" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${dataType === "all" ? "font-bold" : ""}`}
                     onClick={() => {
                       setDataType("all");
                       setTypeDropdownOpen(false);
@@ -402,8 +415,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                     Semua
                   </button>
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${dataType === "income" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${dataType === "income" ? "font-bold" : ""}`}
                     onClick={() => {
                       setDataType("income");
                       setTypeDropdownOpen(false);
@@ -412,8 +426,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                     Pemasukan
                   </button>
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${dataType === "expenses" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${dataType === "expenses" ? "font-bold" : ""}`}
                     onClick={() => {
                       setDataType("expenses");
                       setTypeDropdownOpen(false);
@@ -422,8 +437,9 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                     Pengeluaran
                   </button>
                   <button
-                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
-                      } ${dataType === "balance" ? "font-bold" : ""}`}
+                    className={`block w-full text-left px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm ${
+                      darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                    } ${dataType === "balance" ? "font-bold" : ""}`}
                     onClick={() => {
                       setDataType("balance");
                       setTypeDropdownOpen(false);
@@ -448,7 +464,7 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                 top: 10,
                 right: windowWidth < 640 ? 5 : 10,
                 left: windowWidth < 640 ? -15 : 0,
-                bottom: 10
+                bottom: 10,
               }}
             >
               <CartesianGrid
@@ -460,7 +476,7 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                 dataKey="name"
                 tick={{
                   fill: darkMode ? "#e5e7eb" : "#4b5563",
-                  fontSize: windowWidth < 640 ? 10 : 12
+                  fontSize: windowWidth < 640 ? 10 : 12,
                 }}
                 tickMargin={5}
                 angle={windowWidth < 480 ? -15 : 0}
@@ -471,7 +487,7 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                 tickFormatter={(value) => formatRupiah(value)}
                 tick={{
                   fill: darkMode ? "#e5e7eb" : "#4b5563",
-                  fontSize: windowWidth < 640 ? 10 : 12
+                  fontSize: windowWidth < 640 ? 10 : 12,
                 }}
                 width={windowWidth < 640 ? 40 : 60}
               />
@@ -480,7 +496,7 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
                 wrapperStyle={{
                   paddingTop: "10px",
                   color: darkMode ? "#e5e7eb" : "#4b5563",
-                  fontSize: windowWidth < 640 ? 10 : 12
+                  fontSize: windowWidth < 640 ? 10 : 12,
                 }}
               />
 
@@ -520,14 +536,16 @@ const MonthlyBalanceChart = ({ darkMode, monthlyData }) => {
           </ResponsiveContainer>
         ) : (
           <div className="flex justify-center items-center h-full">
-            <p className={`text-center text-sm sm:text-base ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p
+              className={`text-center text-sm sm:text-base ${
+                darkMode ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
               Tidak ada data untuk ditampilkan
             </p>
           </div>
         )}
       </div>
-
-
     </div>
   );
 };
