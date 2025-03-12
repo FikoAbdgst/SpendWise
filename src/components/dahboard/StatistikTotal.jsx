@@ -1,7 +1,14 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
-const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran, expenseCategories, incomeSources }) => {
+const StatistikTotal = ({
+  darkMode,
+  totalSaldo,
+  totalPemasukan,
+  totalPengeluaran,
+  expenseCategories,
+  incomeSources,
+}) => {
   const chartData = [
     { name: "Saldo", value: Math.abs(totalSaldo), color: "#8B5CF6" }, // Purple color
     { name: "Pengeluaran", value: Math.abs(totalPengeluaran), color: "#EF4444" }, // Red color
@@ -15,14 +22,15 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
       const data = payload[0].payload;
       return (
         <div
-          className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
-            } p-2 md:p-3 shadow-md rounded-md border text-xs md:text-sm`}
+          className={`${
+            darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
+          } p-2 md:p-3 shadow-md rounded-md border text-xs md:text-sm`}
         >
           <p className="font-semibold" style={{ color: data.color }}>
             {data.name}
           </p>
           <p className={`${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-            Amount: <span className="font-bold tracking-tight">Rp.{data.value.toLocaleString()}</span>
+            Jumlah: <span className="font-bold tracking-tight">Rp.{data.value.toLocaleString()}</span>
           </p>
         </div>
       );
@@ -36,8 +44,15 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
       <div className="w-full flex flex-wrap justify-center items-center gap-2 md:gap-4 px-1 mt-2 md:mt-4">
         {payload.map((entry, index) => (
           <div key={`item-${index}`} className="flex items-center gap-1 md:gap-2">
-            <div className="w-2 h-2 md:w-3 md:h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className={`${darkMode ? "text-white" : "text-black"} font-medium text-xs truncate max-w-40`}>
+            <div
+              className="w-2 h-2 md:w-3 md:h-3 rounded-full"
+              style={{ backgroundColor: entry.color }}
+            />
+            <span
+              className={`${
+                darkMode ? "text-white" : "text-black"
+              } font-medium text-xs md:text-sm truncate max-w-40`}
+            >
               {entry.payload.name}: Rp{Math.abs(entry.payload.value).toLocaleString()}
             </span>
           </div>
@@ -49,10 +64,15 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
   return (
     <div className="w-full h-full lg:w-3/5">
       <div
-        className={`${darkMode ? "bg-gray-800" : "bg-white"
-          } w-full h-full p-3 md:p-5 rounded-xl shadow transition-colors duration-200 flex flex-col`}
+        className={`${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } w-full h-full p-3 md:p-5 rounded-xl shadow transition-colors duration-200 flex flex-col`}
       >
-        <h2 className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${darkMode ? "text-white" : "text-black"}`}>
+        <h2
+          className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${
+            darkMode ? "text-white" : "text-black"
+          }`}
+        >
           Statistik Keuangan
         </h2>
         <div className="w-full flex items-center justify-center flex-1">
@@ -79,7 +99,9 @@ const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran
                 y="37%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className={`${darkMode ? "text-gray-300" : "text-gray-500"} text-xs md:text-sm font-medium`}
+                className={`${
+                  darkMode ? "text-gray-300" : "text-gray-500"
+                } text-xs md:text-sm font-medium`}
                 fill={darkMode ? "#D1D5DB" : "#6B7280"}
               >
                 Sisa Saldo
