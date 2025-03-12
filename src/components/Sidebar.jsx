@@ -38,10 +38,12 @@ const Sidebar = ({ setIsLoggedIn, darkMode, toggleMobileMenu }) => {
       {/* Logo */}
       <div className="px-4 md:px-6 py-4 md:py-6">
         <div className="flex justify-start items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 rounded-full" />
-          <h2 className={`text-lg md:text-xl font-bold ${darkMode ? "text-white" : "text-black"}`}>
+          <img src="/logo.png" alt="Logo" className="w-12 h-12 rounded-full" />
+          <h
+            className={`text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent`}
+          >
             SpendTvise
-          </h2>
+          </h>
         </div>
       </div>
 

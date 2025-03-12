@@ -128,20 +128,20 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
     transactionFilter === "all"
       ? "Semua"
       : transactionFilter === "income"
-        ? "Pemasukan"
-        : "Pengeluaran";
+      ? "Pemasukan"
+      : "Pengeluaran";
 
   // Close filter dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showFilterDropdown && !event.target.closest('.filter-dropdown-container')) {
+      if (showFilterDropdown && !event.target.closest(".filter-dropdown-container")) {
         setShowFilterDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showFilterDropdown]);
 
@@ -152,8 +152,9 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
       <div className="flex items-center justify-between mb-4 sm:mb-5 relative">
         {isLoggedIn && (
           <button
-            className={`md:hidden p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : "text-gray-500 border-gray-300"
-              } transition-colors duration-200`}
+            className={`md:hidden p-2 rounded-md bg-transparent border ${
+              darkMode ? "text-600 border-gray-700" : "text-gray-500 border-gray-300"
+            } transition-colors duration-200`}
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -175,8 +176,9 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         )}
 
         <h1
-          className={`text-xl sm:text-2xl font-bold text-center flex-1 md:text-start ${darkMode ? "text-white" : "text-black"
-            }`}
+          className={`text-xl sm:text-2xl font-bold text-center flex-1 md:text-start ${
+            darkMode ? "text-white" : "text-black"
+          }`}
         >
           Dashboard
         </h1>
@@ -222,27 +224,31 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
               {/* Improved dropdown positioning */}
               {showFilterDropdown && (
                 <div
-                  className={`absolute right-2 sm:right-5 top-14 w-40 ${darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-100"
-                    } shadow-lg rounded-lg py-1 z-50 border`}
+                  className={`absolute right-2 sm:right-5 top-14 w-40 ${
+                    darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-100"
+                  } shadow-lg rounded-lg py-1 z-50 border`}
                 >
                   <button
                     onClick={() => handleFilterChange("all")}
-                    className={`w-full text-left px-3 py-2 text-sm ${darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
-                      } transition-colors`}
+                    className={`w-full text-left px-3 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
+                    } transition-colors`}
                   >
                     Semua
                   </button>
                   <button
                     onClick={() => handleFilterChange("income")}
-                    className={`w-full text-left px-3 py-2 text-sm ${darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
-                      } transition-colors`}
+                    className={`w-full text-left px-3 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
+                    } transition-colors`}
                   >
                     Pemasukan
                   </button>
                   <button
                     onClick={() => handleFilterChange("expense")}
-                    className={`w-full text-left px-3 py-2 text-sm ${darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
-                      } transition-colors`}
+                    className={`w-full text-left px-3 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-600 text-white" : "hover:bg-gray-100 text-gray-700"
+                    } transition-colors`}
                   >
                     Pengeluaran
                   </button>
@@ -257,7 +263,11 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         // Added loading state
         <div className="flex justify-center items-center h-64">
           <div className={`text-center ${darkMode ? "text-white" : "text-gray-800"}`}>
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <div
+              className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
+                darkMode ? "border-purple-500" : "border-blue-500"
+              } mx-auto mb-4`}
+            ></div>
             <p>Memuat data...</p>
           </div>
         </div>
