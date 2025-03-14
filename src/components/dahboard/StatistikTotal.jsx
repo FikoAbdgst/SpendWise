@@ -84,7 +84,8 @@ const StatistikTotal = ({
           </h2>
         </div>
         <div className="w-full flex items-center justify-center flex-1">
-          <ResponsiveContainer width="100%" height={380} className="mt-2">
+          {/* desktop mode */}
+          <ResponsiveContainer width="100%" height={380} className="mt-2 hidden md:block ">
             <PieChart>
               <Pie
                 data={filteredChartData}
@@ -104,7 +105,7 @@ const StatistikTotal = ({
               </Pie>
               <text
                 x="50%"
-                y="35%"
+                y="30%"
                 textAnchor="middle"
                 dominantBaseline="middle"
                 className={`${darkMode ? "text-gray-300" : "text-gray-500"
@@ -115,7 +116,56 @@ const StatistikTotal = ({
               </text>
               <text
                 x="50%"
-                y="42%"
+                y="38%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="text-base md:text-xl font-bold"
+                fill={darkMode ? "#FFFFFF" : "#000000"}
+              >
+                Rp{Math.abs(totalSaldo).toLocaleString('id-ID')}
+              </text>
+              <Tooltip content={<CustomTooltip />} />
+              <Legend
+                content={<CustomLegend />}
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+              />
+            </PieChart>
+          </ResponsiveContainer>
+          {/* mobile mode */}
+          <ResponsiveContainer width="100%" height={380} className="mt-2 block md:hidden ">
+            <PieChart>
+              <Pie
+                data={filteredChartData}
+                cx="50%"
+                cy="45%"
+                innerRadius={80}
+                outerRadius={110}
+                dataKey="value"
+                stroke="none"
+                paddingAngle={2}
+                startAngle={90}
+                endAngle={-270}
+              >
+                {filteredChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <text
+                x="50%"
+                y="27%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className={`${darkMode ? "text-gray-300" : "text-gray-500"
+                  } text-xs md:text-sm font-medium`}
+                fill={darkMode ? "#D1D5DB" : "#6B7280"}
+              >
+                Sisa Saldo
+              </text>
+              <text
+                x="50%"
+                y="34%"
                 textAnchor="middle"
                 dominantBaseline="middle"
                 className="text-base md:text-xl font-bold"

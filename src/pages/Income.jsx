@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus, FaSave, FaTimes, FaTrash, FaEdit, FaSearch } from "react-icons/fa";
+import { FaPlus, FaSearch } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import FormInputIncome from "../components/income/FormInputIncome";
@@ -386,8 +386,8 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
           <button
             onClick={() => setShowForm(true)}
             className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${darkMode
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-purple-600 text-white hover:bg-purple-700"
+              : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             aria-label="Add new income"
           >

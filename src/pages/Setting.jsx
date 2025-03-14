@@ -188,9 +188,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
       <div className="flex items-center justify-center mb-5 md:mb-0 relative">
         {isLoggedIn && (
           <button
-            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${
-              darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
-            } transition-colors duration-200`}
+            className={`md:hidden absolute left-0 p-2 rounded-md bg-transparent border ${darkMode ? "text-600 border-gray-700" : " text-gray-500 border-gray-300"
+              } transition-colors duration-200`}
             onClick={toggleMobileMenu}
           >
             <svg
@@ -211,9 +210,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         )}
 
         <h1
-          className={`text-center md:text-start mb-5 text-2xl font-bold ${
-            darkMode ? "text-white" : "text-black"
-          }`}
+          className={`text-center md:text-start mb-5 text-2xl font-bold ${darkMode ? "text-white" : "text-black"
+            }`}
         >
           Settings
         </h1>
@@ -222,15 +220,14 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
       <div className={`mb-6 flex border-b ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
         <button
           onClick={() => setActiveTab("appearance")}
-          className={`px-4 py-2 mr-2 cursor-pointer font-medium ${
-            activeTab === "appearance"
+          className={`px-4 py-2 mr-2 cursor-pointer font-medium ${activeTab === "appearance"
               ? darkMode
                 ? "text-purple-400 border-b-2 border-purple-400"
                 : "text-blue-500 border-b-2 border-blue-500"
               : darkMode
-              ? "text-gray-400"
-              : "text-gray-500"
-          }`}
+                ? "text-gray-400"
+                : "text-gray-500"
+            }`}
         >
           Penampilan
         </button>
@@ -238,29 +235,27 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
           <>
             <button
               onClick={() => setActiveTab("profile")}
-              className={`px-4 py-2 mr-2 cursor-pointer font-medium ${
-                activeTab === "profile"
+              className={`px-4 py-2 mr-2 cursor-pointer font-medium ${activeTab === "profile"
                   ? darkMode
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-blue-500 border-b-2 border-blue-500"
                   : darkMode
-                  ? "text-gray-400"
-                  : "text-gray-500"
-              }`}
+                    ? "text-gray-400"
+                    : "text-gray-500"
+                }`}
             >
               Profile
             </button>
             <button
               onClick={() => setActiveTab("password")}
-              className={`px-4 py-2 cursor-pointer font-medium ${
-                activeTab === "password"
+              className={`px-4 py-2 cursor-pointer font-medium ${activeTab === "password"
                   ? darkMode
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-blue-500 border-b-2 border-blue-500"
                   : darkMode
-                  ? "text-gray-400"
-                  : "text-gray-500"
-              }`}
+                    ? "text-gray-400"
+                    : "text-gray-500"
+                }`}
             >
               Password
             </button>
@@ -270,9 +265,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
       {activeTab === "appearance" && (
         <div
-          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
-            darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
-          }`}
+          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
+            }`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -295,14 +289,12 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
             <button
               onClick={toggleDarkMode}
-              className={`relative inline-flex h-6 w-19 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${
-                darkMode ? "bg-purple-600" : "bg-gray-300"
-              }`}
+              className={`relative inline-flex h-6 w-19 md:w-12 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none ${darkMode ? "bg-purple-600" : "bg-gray-300"
+                }`}
             >
               <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${
-                  darkMode ? "translate-x-6" : "translate-x-1"
-                }`}
+                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${darkMode ? "translate-x-6" : "translate-x-1"
+                  }`}
               />
             </button>
           </div>
@@ -311,9 +303,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
       {isLoggedIn && activeTab === "profile" && (
         <div
-          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
-            darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
-          }`}
+          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
+            }`}
         >
           <div className="flex items-center gap-3 mb-5">
             <FiUser size={24} className={darkMode ? "text-purple-400" : "text-blue-500"} />
@@ -337,10 +328,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
                 value={profileData.full_name}
                 onChange={handleProfileChange}
                 className={`w-full px-4 py-2 rounded-md focus:outline-none 
-                  ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
-                      : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
+                  ${darkMode
+                    ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
+                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
                   } 
                   ${errors.full_name ? "border-red-500" : ""}
                 `}
@@ -363,10 +353,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
                 value={profileData.email}
                 onChange={handleProfileChange}
                 className={`w-full px-4 py-2 rounded-md focus:outline-none 
-                  ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
-                      : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
+                  ${darkMode
+                    ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
+                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
                   } 
                   ${errors.email ? "border-red-500" : ""}
                 `}
@@ -378,11 +367,10 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center cursor-pointer justify-center py-2 px-6 rounded-md font-medium transition-colors ${
-                darkMode
+              className={`flex items-center cursor-pointer justify-center py-2 px-6 rounded-md font-medium transition-colors ${darkMode
                   ? "bg-purple-600 hover:bg-purple-700 text-white"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
-              }`}
+                }`}
             >
               {loading ? (
                 <span className="animate-pulse">Menyimpan...</span>
@@ -398,9 +386,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
 
       {isLoggedIn && activeTab === "password" && (
         <div
-          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${
-            darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
-          }`}
+          className={`p-6 rounded-xl shadow-md transition-colors duration-200 ${darkMode ? "bg-gray-800" : "bg-white border border-gray-200"
+            }`}
         >
           <div className="flex items-center gap-3 mb-5">
             <FiLock size={24} className={darkMode ? "text-purple-400" : "text-blue-500"} />
@@ -424,10 +411,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
                 value={passwordData.currentPassword}
                 onChange={handlePasswordChange}
                 className={`w-full px-4 py-2 rounded-md focus:outline-none 
-                  ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
-                      : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
+                  ${darkMode
+                    ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
+                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
                   } 
                   ${errors.currentPassword ? "border-red-500" : ""}
                 `}
@@ -452,10 +438,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
                 value={passwordData.newPassword}
                 onChange={handlePasswordChange}
                 className={`w-full px-4 py-2 rounded-md focus:outline-none 
-                  ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
-                      : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
+                  ${darkMode
+                    ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
+                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
                   } 
                   ${errors.newPassword ? "border-red-500" : ""}
                 `}
@@ -478,10 +463,9 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordChange}
                 className={`w-full px-4 py-2 rounded-md focus:outline-none 
-                  ${
-                    darkMode
-                      ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
-                      : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
+                  ${darkMode
+                    ? "bg-gray-700 text-white border-gray-600 focus:ring-purple-500"
+                    : "bg-white text-gray-900 border-gray-300 focus:ring-blue-500"
                   } 
                   ${errors.confirmPassword ? "border-red-500" : ""}
                 `}
@@ -493,9 +477,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             </div>
 
             <div
-              className={`border-l-4 p-4 mb-5 ${
-                darkMode ? "bg-yellow-900/20 border-yellow-600" : "bg-yellow-50 border-yellow-400"
-              }`}
+              className={`border-l-4 p-4 mb-5 ${darkMode ? "bg-yellow-900/20 border-yellow-600" : "bg-yellow-50 border-yellow-400"
+                }`}
             >
               <div className="flex items-start">
                 <div className="flex-shrink-0">
@@ -515,11 +498,10 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               type="submit"
               disabled={loading}
-              className={`flex cursor-pointer items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${
-                darkMode
+              className={`flex cursor-pointer items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${darkMode
                   ? "bg-purple-600 hover:bg-purple-700 text-white"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
-              }`}
+                }`}
             >
               {loading ? (
                 <span className="animate-pulse">Memperbarui...</span>
