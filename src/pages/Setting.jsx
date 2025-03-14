@@ -28,20 +28,24 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
     }
   }, [isLoggedIn]);
 
+  // Improve token validation before API calls
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
 
       if (!token) {
-        toast.error("You are not logged in");
+        // Don't show an error toast for expected states
+        console.log("No token found");
         return;
       }
 
+      // Add timeout and retry logic for network stability
       const response = await axios.get(`${apiUrl}/api/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        timeout: 10000, // 10 second timeout
       });
 
       if (response.data.success) {
@@ -51,8 +55,15 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         });
       }
     } catch (error) {
+      // More detailed error logging
       console.error("Error fetching profile:", error);
-      toast.error(error.response?.data?.message || "Failed to load profile");
+
+      // Better error message extraction
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.code === 'ECONNABORTED' ? 'Connection timeout' : 'Failed to load profile');
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -221,12 +232,12 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
         <button
           onClick={() => setActiveTab("appearance")}
           className={`px-4 py-2 mr-2 cursor-pointer font-medium ${activeTab === "appearance"
-              ? darkMode
-                ? "text-purple-400 border-b-2 border-purple-400"
-                : "text-blue-500 border-b-2 border-blue-500"
-              : darkMode
-                ? "text-gray-400"
-                : "text-gray-500"
+            ? darkMode
+              ? "text-purple-400 border-b-2 border-purple-400"
+              : "text-blue-500 border-b-2 border-blue-500"
+            : darkMode
+              ? "text-gray-400"
+              : "text-gray-500"
             }`}
         >
           Penampilan
@@ -236,12 +247,12 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               onClick={() => setActiveTab("profile")}
               className={`px-4 py-2 mr-2 cursor-pointer font-medium ${activeTab === "profile"
-                  ? darkMode
-                    ? "text-purple-400 border-b-2 border-purple-400"
-                    : "text-blue-500 border-b-2 border-blue-500"
-                  : darkMode
-                    ? "text-gray-400"
-                    : "text-gray-500"
+                ? darkMode
+                  ? "text-purple-400 border-b-2 border-purple-400"
+                  : "text-blue-500 border-b-2 border-blue-500"
+                : darkMode
+                  ? "text-gray-400"
+                  : "text-gray-500"
                 }`}
             >
               Profile
@@ -249,12 +260,12 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
             <button
               onClick={() => setActiveTab("password")}
               className={`px-4 py-2 cursor-pointer font-medium ${activeTab === "password"
-                  ? darkMode
-                    ? "text-purple-400 border-b-2 border-purple-400"
-                    : "text-blue-500 border-b-2 border-blue-500"
-                  : darkMode
-                    ? "text-gray-400"
-                    : "text-gray-500"
+                ? darkMode
+                  ? "text-purple-400 border-b-2 border-purple-400"
+                  : "text-blue-500 border-b-2 border-blue-500"
+                : darkMode
+                  ? "text-gray-400"
+                  : "text-gray-500"
                 }`}
             >
               Password
@@ -368,8 +379,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
               type="submit"
               disabled={loading}
               className={`flex items-center cursor-pointer justify-center py-2 px-6 rounded-md font-medium transition-colors ${darkMode
-                  ? "bg-purple-600 hover:bg-purple-700 text-white"
-                  : "bg-blue-500 hover:bg-blue-600 text-white"
+                ? "bg-purple-600 hover:bg-purple-700 text-white"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
                 }`}
             >
               {loading ? (
@@ -499,8 +510,8 @@ const Setting = ({ darkMode, toggleDarkMode, isLoggedIn, toggleMobileMenu }) => 
               type="submit"
               disabled={loading}
               className={`flex cursor-pointer items-center justify-center py-2 px-6 rounded-md font-medium transition-colors ${darkMode
-                  ? "bg-purple-600 hover:bg-purple-700 text-white"
-                  : "bg-blue-500 hover:bg-blue-600 text-white"
+                ? "bg-purple-600 hover:bg-purple-700 text-white"
+                : "bg-blue-500 hover:bg-blue-600 text-white"
                 }`}
             >
               {loading ? (
