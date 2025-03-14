@@ -3,12 +3,7 @@ import { AiOutlinePieChart } from "react-icons/ai";
 import { IoPieChartSharp } from "react-icons/io5";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
-const StatistikTotal = ({
-  darkMode,
-  totalSaldo,
-  totalPemasukan,
-  totalPengeluaran,
-}) => {
+const StatistikTotal = ({ darkMode, totalSaldo, totalPemasukan, totalPengeluaran }) => {
   const chartData = [
     { name: "Saldo", value: Math.abs(totalSaldo), color: "#8B5CF6" }, // Purple color
     { name: "Pengeluaran", value: Math.abs(totalPengeluaran), color: "#EF4444" }, // Red color
@@ -22,14 +17,16 @@ const StatistikTotal = ({
       const data = payload[0].payload;
       return (
         <div
-          className={`${darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
-            } p-2 md:p-3 shadow-md rounded-md border text-xs md:text-sm`}
+          className={`${
+            darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-200 text-black"
+          } p-2 md:p-3 shadow-md rounded-md border text-xs md:text-sm`}
         >
           <p className="font-semibold" style={{ color: data.color }}>
             {data.name}
           </p>
           <p className={`${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-            Jumlah: <span className="font-bold tracking-tight">Rp{data.value.toLocaleString('id-ID')}</span>
+            Jumlah:{" "}
+            <span className="font-bold tracking-tight">Rp{data.value.toLocaleString("id-ID")}</span>
           </p>
         </div>
       );
@@ -51,10 +48,14 @@ const StatistikTotal = ({
               style={{ backgroundColor: entry.color }}
             />
             <span
-              className={`${darkMode ? "text-white" : "text-gray-800"
-                } font-medium text-xs md:text-sm whitespace-normal`}
+              className={`${
+                darkMode ? "text-white" : "text-gray-800"
+              } font-medium text-xs md:text-sm whitespace-normal`}
             >
-              {entry.payload.name}: <span className="font-bold">Rp{Math.abs(entry.payload.value).toLocaleString('id-ID')}</span>
+              {entry.payload.name}:{" "}
+              <span className="font-bold">
+                Rp{Math.abs(entry.payload.value).toLocaleString("id-ID")}
+              </span>
             </span>
           </div>
         ))}
@@ -65,21 +66,21 @@ const StatistikTotal = ({
   return (
     <div className="w-full h-full lg:w-3/5">
       <div
-        className={`${darkMode ? "bg-gray-800" : "bg-white"
-          } w-full h-full p-3 md:p-5 rounded-xl shadow transition-colors duration-200 flex flex-col`}
+        className={`${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } w-full h-full p-3 md:p-5 rounded-xl shadow transition-colors duration-200 flex flex-col`}
       >
         <div
-          className={`flex items-center gap-2  mb-2 md:mb-3 ${darkMode ? "text-white" : "text-black"
-            }`}
+          className={`flex items-center gap-2  mb-2 md:mb-3 ${darkMode ? "text-white" : "text-black"}`}
         >
-          <span className={`p-2 rounded-lg ${darkMode
-            ? "bg-gray-700 text-purple-400"
-            : "bg-purple-100 text-purple-600"}`}>
+          <span
+            className={`p-2 rounded-lg ${
+              darkMode ? "bg-gray-700 text-purple-400" : "bg-purple-100 text-blue-600"
+            }`}
+          >
             <AiOutlinePieChart className=" w-6 h-6" />
           </span>
-          <h2 className={`text-base md:text-xl font-bold ${darkMode ? "text-white" : "text-black"
-            }`}>
-
+          <h2 className={`text-base md:text-xl font-bold ${darkMode ? "text-white" : "text-black"}`}>
             Statistik Keuangan
           </h2>
         </div>
@@ -108,8 +109,9 @@ const StatistikTotal = ({
                 y="30%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className={`${darkMode ? "text-gray-300" : "text-gray-500"
-                  } text-xs md:text-sm font-medium`}
+                className={`${
+                  darkMode ? "text-gray-300" : "text-gray-500"
+                } text-xs md:text-sm font-medium`}
                 fill={darkMode ? "#D1D5DB" : "#6B7280"}
               >
                 Sisa Saldo
@@ -122,7 +124,7 @@ const StatistikTotal = ({
                 className="text-base md:text-xl font-bold"
                 fill={darkMode ? "#FFFFFF" : "#000000"}
               >
-                Rp{Math.abs(totalSaldo).toLocaleString('id-ID')}
+                Rp{Math.abs(totalSaldo).toLocaleString("id-ID")}
               </text>
               <Tooltip content={<CustomTooltip />} />
               <Legend
@@ -157,8 +159,9 @@ const StatistikTotal = ({
                 y="27%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className={`${darkMode ? "text-gray-300" : "text-gray-500"
-                  } text-xs md:text-sm font-medium`}
+                className={`${
+                  darkMode ? "text-gray-300" : "text-gray-500"
+                } text-xs md:text-sm font-medium`}
                 fill={darkMode ? "#D1D5DB" : "#6B7280"}
               >
                 Sisa Saldo
@@ -171,7 +174,7 @@ const StatistikTotal = ({
                 className="text-base md:text-xl font-bold"
                 fill={darkMode ? "#FFFFFF" : "#000000"}
               >
-                Rp{Math.abs(totalSaldo).toLocaleString('id-ID')}
+                Rp{Math.abs(totalSaldo).toLocaleString("id-ID")}
               </text>
               <Tooltip content={<CustomTooltip />} />
               <Legend

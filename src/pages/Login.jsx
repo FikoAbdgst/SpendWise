@@ -292,7 +292,7 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
           </div>
           <button
             type="submit"
-            className={`w-full py-2 sm:py-2.5 px-4 rounded-md text-sm font-medium transition duration-300 shadow-md ${
+            className={`w-full cursor-pointer py-2 sm:py-2.5 px-4 rounded-md text-sm font-medium transition duration-300 shadow-md ${
               loading
                 ? `${
                     darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-400 text-white"
