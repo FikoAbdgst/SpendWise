@@ -15,7 +15,7 @@ const TableDataExpense = ({
   setCurrentPage,
   itemsPerPage = 10,
 }) => {
-  useEffect(() => { }, [filteredExpenses]);
+  useEffect(() => {}, [filteredExpenses]);
 
   const safeCurrentPage = currentPage || 1;
   const safeItemsPerPage = itemsPerPage || 10;
@@ -48,7 +48,7 @@ const TableDataExpense = ({
   // Tema warna untuk tampilan mobile saja
   const mobileTheme = {
     light: {
-      mobileCard: "bg-white border-2 border-red-100 shadow-sm",
+      mobileCard: "bg-white border-2 border-gray-100 shadow-sm",
       mobileButton: "bg-transparent hover:bg-gray-100",
       expenseText: "text-red-600 font-medium",
       editIcon: "text-blue-600",
@@ -62,7 +62,7 @@ const TableDataExpense = ({
       editIcon: "text-blue-400",
       deleteIcon: "text-red-400",
       paginationText: "text-gray-300",
-    }
+    },
   };
 
   const mt = darkMode ? mobileTheme.dark : mobileTheme.light;
@@ -126,16 +126,18 @@ const TableDataExpense = ({
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => handleEdit(expense)}
-                        className={`p-2 rounded-full cursor-pointer ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
+                        className={`p-2 rounded-full cursor-pointer ${
+                          darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                        }`}
                         title="Edit"
                       >
                         <FaEdit className={darkMode ? "text-blue-400" : "text-blue-500"} />
                       </button>
                       <button
                         onClick={() => handleDelete(expense.id)}
-                        className={`p-2 rounded-full cursor-pointer ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
-                          }`}
+                        className={`p-2 rounded-full cursor-pointer ${
+                          darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                        }`}
                         title="Hapus"
                       >
                         <FaTrash className={darkMode ? "text-red-400" : "text-red-500"} />
@@ -159,10 +161,7 @@ const TableDataExpense = ({
       <div className="md:hidden space-y-3">
         {currentPageData.length > 0 ? (
           currentPageData.map((expense) => (
-            <div
-              key={expense.id}
-              className={`p-4 rounded-lg ${mt.mobileCard}`}
-            >
+            <div key={expense.id} className={`p-4 rounded-lg ${mt.mobileCard}`}>
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                   <span className="text-xl mr-2">{expense.icon || "💰"}</span>
@@ -186,12 +185,8 @@ const TableDataExpense = ({
                 </div>
               </div>
               <div className="flex justify-between text-sm">
-                <span className={mt.paginationText}>
-                  {formatDate(expense.date)}
-                </span>
-                <span className={mt.expenseText}>
-                  {formatCurrency(expense.amount)}
-                </span>
+                <span className={mt.paginationText}>{formatDate(expense.date)}</span>
+                <span className={mt.expenseText}>{formatCurrency(expense.amount)}</span>
               </div>
             </div>
           ))
@@ -212,8 +207,9 @@ const TableDataExpense = ({
             <button
               onClick={handlePrevPage}
               disabled={safeCurrentPage === 1}
-              className={`px-3 py-1 sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${safeCurrentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+              className={`px-3 py-1 sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${
+                safeCurrentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               aria-label="Previous page"
             >
               Sebelumnya
@@ -237,14 +233,15 @@ const TableDataExpense = ({
                   <button
                     key={pageNum}
                     onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-1 cursor-pointer sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${safeCurrentPage === pageNum
-                      ? darkMode
-                        ? "bg-purple-600 text-white"
-                        : "bg-blue-500 text-white"
-                      : darkMode
+                    className={`px-3 py-1 cursor-pointer sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${
+                      safeCurrentPage === pageNum
+                        ? darkMode
+                          ? "bg-purple-600 text-white"
+                          : "bg-blue-500 text-white"
+                        : darkMode
                         ? "bg-gray-700 hover:bg-gray-600"
                         : "bg-gray-200 hover:bg-gray-300"
-                      }`}
+                    }`}
                   >
                     {pageNum}
                   </button>
@@ -254,8 +251,9 @@ const TableDataExpense = ({
             <button
               onClick={handleNextPage}
               disabled={safeCurrentPage === totalPages}
-              className={`px-3 py-1 sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${safeCurrentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
+              className={`px-3 py-1 sm:px-2 sm:py-1 text-xs md:text-sm rounded-md ${
+                safeCurrentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              } ${darkMode ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"}`}
               aria-label="Next page"
             >
               Selanjutnya
