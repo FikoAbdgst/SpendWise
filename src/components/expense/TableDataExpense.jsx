@@ -49,7 +49,7 @@ const TableDataExpense = ({
   const mobileTheme = {
     light: {
       mobileCard: "bg-white border-2 border-red-100 shadow-sm",
-      mobileButton: "bg-red-50 hover:bg-red-100",
+      mobileButton: "bg-transparent hover:bg-gray-100",
       expenseText: "text-red-600 font-medium",
       editIcon: "text-blue-600",
       deleteIcon: "text-red-600",
@@ -57,7 +57,7 @@ const TableDataExpense = ({
     },
     dark: {
       mobileCard: "bg-gray-800 border-2 border-gray-700",
-      mobileButton: "bg-gray-700 hover:bg-gray-600",
+      mobileButton: "bg-transparent hover:bg-gray-600",
       expenseText: "text-red-400 font-medium",
       editIcon: "text-blue-400",
       deleteIcon: "text-red-400",

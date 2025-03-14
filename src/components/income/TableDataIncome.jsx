@@ -48,8 +48,8 @@ const TableDataIncome = ({
     // Tema warna untuk tampilan mobile saja
     const mobileTheme = {
         light: {
-            mobileCard: "bg-white border-2 border-blue-100 shadow-sm",
-            mobileButton: "bg-blue-100 hover:bg-blue-200",
+            mobileCard: "bg-white border-2 border-gray-100 shadow-sm",
+            mobileButton: "bg-transparent hover:bg-gray-200",
             incomeText: "text-emerald-600 font-medium",
             editIcon: "text-blue-600",
             deleteIcon: "text-red-600",
@@ -57,7 +57,7 @@ const TableDataIncome = ({
         },
         dark: {
             mobileCard: "bg-gray-800 border-2 border-gray-700",
-            mobileButton: "bg-gray-700 hover:bg-gray-600",
+            mobileButton: "bg-transparent hover:bg-gray-600",
             incomeText: "text-emerald-400 font-medium",
             editIcon: "text-blue-400",
             deleteIcon: "text-red-400",

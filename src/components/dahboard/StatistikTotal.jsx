@@ -1,4 +1,6 @@
 import React from "react";
+import { AiOutlinePieChart } from "react-icons/ai";
+import { IoPieChartSharp } from "react-icons/io5";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const StatistikTotal = ({
@@ -6,13 +8,11 @@ const StatistikTotal = ({
   totalSaldo,
   totalPemasukan,
   totalPengeluaran,
-  expenseCategories,
-  incomeSources,
 }) => {
   const chartData = [
     { name: "Saldo", value: Math.abs(totalSaldo), color: "#8B5CF6" }, // Purple color
     { name: "Pengeluaran", value: Math.abs(totalPengeluaran), color: "#EF4444" }, // Red color
-    { name: "Pemasukan", value: Math.abs(totalPemasukan), color: "#F97316" }, // Orange color
+    { name: "Pemasukan", value: Math.abs(totalPemasukan), color: "#10B981" }, // Orange color
   ];
 
   const filteredChartData = chartData.filter((item) => item.value > 0);
@@ -36,22 +36,25 @@ const StatistikTotal = ({
     }
     return null;
   };
-
   const CustomLegend = (props) => {
     const { payload } = props;
     return (
-      <div className="w-full flex flex-wrap justify-center items-center gap-2 md:gap-4 px-1 mt-2 md:mt-4">
+      <div className="w-full flex flex-wrap justify-center items-center gap-3 md:gap-5 px-1 mt-3">
         {payload.map((entry, index) => (
-          <div key={`item-${index}`} className="flex items-center gap-1 md:gap-2">
+          <div
+            key={`item-${index}`}
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors hover:bg-opacity-10"
+            style={{ backgroundColor: `${entry.color}20` }}
+          >
             <div
-              className="w-2 h-2 md:w-3 md:h-3 rounded-full"
+              className="w-3 h-3 md:w-4 md:h-4 rounded-full"
               style={{ backgroundColor: entry.color }}
             />
             <span
-              className={`${darkMode ? "text-white" : "text-black"
-                } font-medium text-xs md:text-sm whitespace-normal break-words`}
+              className={`${darkMode ? "text-white" : "text-gray-800"
+                } font-medium text-xs md:text-sm whitespace-normal`}
             >
-              {entry.payload.name}: Rp{Math.abs(entry.payload.value).toLocaleString('id-ID')}
+              {entry.payload.name}: <span className="font-bold">Rp{Math.abs(entry.payload.value).toLocaleString('id-ID')}</span>
             </span>
           </div>
         ))}
@@ -65,12 +68,21 @@ const StatistikTotal = ({
         className={`${darkMode ? "bg-gray-800" : "bg-white"
           } w-full h-full p-3 md:p-5 rounded-xl shadow transition-colors duration-200 flex flex-col`}
       >
-        <h2
-          className={`text-base md:text-lg font-semibold mb-2 md:mb-3 ${darkMode ? "text-white" : "text-black"
+        <div
+          className={`flex items-center gap-2  mb-2 md:mb-3 ${darkMode ? "text-white" : "text-black"
             }`}
         >
-          Statistik Keuangan
-        </h2>
+          <span className={`p-2 rounded-lg ${darkMode
+            ? "bg-gray-700 text-purple-400"
+            : "bg-purple-100 text-purple-600"}`}>
+            <AiOutlinePieChart className=" w-6 h-6" />
+          </span>
+          <h2 className={`text-base md:text-xl font-bold ${darkMode ? "text-white" : "text-black"
+            }`}>
+
+            Statistik Keuangan
+          </h2>
+        </div>
         <div className="w-full flex items-center justify-center flex-1">
           <ResponsiveContainer width="100%" height={380} className="mt-2">
             <PieChart>
