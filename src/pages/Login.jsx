@@ -26,17 +26,14 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
       ? "https://backend-spendwise.vercel.app"
       : "http://localhost:3000";
 
-  // Fungsi untuk mengubah state animasi
   const switchState = (stateName) => {
     animationRef.current?.interactivity?.goToState(stateName, { duration: 0.1 });
   };
 
-  // Handler untuk focus dan blur pada input
   const handleEmailFocus = () => switchState("Following");
   const handlePasswordFocus = () => switchState(showPassword ? "Peeking" : "Covering");
   const handleBlur = () => switchState("Blinking");
 
-  // Update animasi berdasarkan panjang email
   useEffect(() => {
     animationRef.current?.interactivity?.inputs.set(
       "name_length",
@@ -44,7 +41,6 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
     );
   }, [formData.email]);
 
-  // Update animasi saat toggle show/hide password berubah
   useEffect(() => {
     switchState(showPassword ? "Peeking" : "Covering");
   }, [showPassword]);
@@ -53,7 +49,6 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
     e.preventDefault();
     const { email, password } = formData;
 
-    // Validasi input
     if (!email || !password) {
       toast.error("Email dan password harus diisi", {
         position: "top-right",
@@ -83,18 +78,14 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
         throw new Error(data.message || "Login gagal");
       }
 
-      // Simpan token di localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Update state aplikasi
       setIsLoggedIn(true);
       setUsername(data.user.full_name || data.user.email);
 
-      // Redirect ke halaman utama
       navigate("/");
     } catch (err) {
-      // Show error toast
       toast.error(err.message || "Terjadi kesalahan saat login", {
         position: "top-right",
         autoClose: 5000,
@@ -179,7 +170,6 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  // Eye off icon (when password is visible)
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -195,7 +185,6 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
                     />
                   </svg>
                 ) : (
-                  // Eye icon (when password is hidden)
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
