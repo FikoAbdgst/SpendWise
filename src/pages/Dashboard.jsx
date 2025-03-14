@@ -4,6 +4,7 @@ import CardsTotal from "../components/dahboard/CardsTotal";
 import StatistikTotal from "../components/dahboard/StatistikTotal";
 import RecentTransaction from "../components/dahboard/RecentTransaction";
 import MonthlyBalanceChart from "../components/dahboard/MonthlyBalanceCart";
+import { useLocation } from "react-router-dom";
 
 const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -36,6 +37,7 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
 
     return data;
   };
+  const location = useLocation();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -71,7 +73,7 @@ const Dashboard = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
 
     fetchDashboardData();
     fetchTransactions(transactionFilter);
-  }, []);
+  }, [location.pathname]);
 
   // Fetch transactions with current filter
   const fetchTransactions = async (filter) => {
