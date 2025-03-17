@@ -389,8 +389,8 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
           <button
             onClick={() => setShowForm(true)}
             className={`flex items-center justify-center gap-2 px-4 py-2 cursor-pointer rounded-md ${darkMode
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-purple-600 text-white hover:bg-purple-700"
+              : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             aria-label="Add new expense"
           >
@@ -414,6 +414,7 @@ const Expense = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         formData={formData}
         handleDateChange={handleDateChange}
         loading={loading}
+        expenses={expenses} // Pass all expenses data for template suggestions
       />
 
       {showConfirmDelete && (

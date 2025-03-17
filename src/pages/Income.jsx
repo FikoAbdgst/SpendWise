@@ -411,6 +411,7 @@ const Income = ({ darkMode, isLoggedIn, toggleMobileMenu }) => {
         formData={formData}
         handleDateChange={handleDateChange}
         loading={loading}
+        incomes={incomes} // Pass all incomes data for template suggestions
       />
 
       {showConfirmDelete && (
