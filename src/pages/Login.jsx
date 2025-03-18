@@ -101,34 +101,28 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center bg-gradient-to-br px-4 py-8 ${
-        darkMode ? "from-gray-900 to-gray-800" : "from-blue-50 to-indigo-100"
-      }`}
+      className={`min-h-screen flex items-center justify-center bg-gradient-to-br px-4 py-8 ${darkMode ? "from-gray-900 to-gray-800" : "from-blue-50 to-indigo-100"
+        }`}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
-          className={`absolute -top-20 -left-20 w-40 md:w-64 h-40 md:h-64 rounded-full ${
-            darkMode ? "bg-blue-900/10" : "bg-blue-500/10"
-          }`}
+          className={`absolute -top-20 -left-20 w-40 md:w-64 h-40 md:h-64 rounded-full ${darkMode ? "bg-blue-900/10" : "bg-blue-500/10"
+            }`}
         ></div>
         <div
-          className={`absolute top-1/4 -right-20 w-64 md:w-96 h-64 md:h-96 rounded-full ${
-            darkMode ? "bg-purple-900/10" : "bg-indigo-500/10"
-          }`}
+          className={`absolute top-1/4 -right-20 w-64 md:w-96 h-64 md:h-96 rounded-full ${darkMode ? "bg-purple-900/10" : "bg-indigo-500/10"
+            }`}
         ></div>
         <div
-          className={`absolute -bottom-20 left-1/3 w-48 md:w-80 h-48 md:h-80 rounded-full ${
-            darkMode ? "bg-indigo-900/10" : "bg-purple-500/10"
-          }`}
+          className={`absolute -bottom-20 left-1/3 w-48 md:w-80 h-48 md:h-80 rounded-full ${darkMode ? "bg-indigo-900/10" : "bg-purple-500/10"
+            }`}
         ></div>
       </div>
 
       <div
-        className={`relative z-10 ${
-          darkMode ? "bg-gray-800/90" : "bg-white/90"
-        } p-4 sm:p-6 md:p-8 rounded-xl shadow-xl backdrop-blur-sm w-full max-w-sm sm:max-w-md flex flex-col items-center border ${
-          darkMode ? "border-gray-700" : "border-gray-200"
-        }`}
+        className={`relative z-10 ${darkMode ? "bg-gray-800/90" : "bg-white/90"
+          } p-4 sm:p-6 md:p-8 rounded-xl shadow-xl backdrop-blur-sm w-full max-w-sm sm:max-w-md flex flex-col items-center border ${darkMode ? "border-gray-700" : "border-gray-200"
+          }`}
       >
         {/* Responsive Lottie Animation */}
         <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mb-2">
@@ -136,9 +130,8 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
         </div>
 
         <h2
-          className={`text-xl sm:text-2xl font-bold mb-1 text-center ${
-            darkMode ? "text-white" : "text-gray-800"
-          }`}
+          className={`text-xl sm:text-2xl font-bold mb-1 text-center ${darkMode ? "text-white" : "text-gray-800"
+            }`}
         >
           Selamat Datang
         </h2>
@@ -153,17 +146,15 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label
-                className={`text-xs sm:text-sm font-medium ${
-                  darkMode ? "text-gray-200" : "text-gray-700"
-                }`}
+                className={`text-xs sm:text-sm font-medium ${darkMode ? "text-gray-200" : "text-gray-700"
+                  }`}
               >
                 Email
               </label>
             </div>
             <div
-              className={`relative focus-within:ring-2 focus-within:ring-offset-2 ${
-                darkMode ? "focus-within:ring-blue-500" : "focus-within:ring-blue-600"
-              } rounded-md`}
+              className={`relative focus-within:ring-2 focus-within:ring-offset-2 ${darkMode ? "focus-within:ring-blue-500" : "focus-within:ring-blue-600"
+                } rounded-md`}
             >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
@@ -188,11 +179,10 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
                 onChange={handleChange}
                 onFocus={handleEmailFocus}
                 onBlur={handleBlur}
-                className={`w-full pl-10 pr-3 py-2 sm:py-2.5 text-sm border rounded-md transition duration-200 ${
-                  darkMode
+                className={`w-full pl-10 pr-3 py-2 sm:py-2.5 text-sm border rounded-md transition duration-200 ${darkMode
                     ? "bg-gray-700/70 border-gray-600 text-white placeholder-gray-400 outline-none focus:border-blue-500"
                     : "bg-white/90 border-gray-300 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500"
-                }`}
+                  }`}
                 placeholder="Masukkan email"
               />
             </div>
@@ -201,17 +191,15 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label
-                className={`text-xs sm:text-sm font-medium ${
-                  darkMode ? "text-gray-200" : "text-gray-700"
-                }`}
+                className={`text-xs sm:text-sm font-medium ${darkMode ? "text-gray-200" : "text-gray-700"
+                  }`}
               >
                 Password
               </label>
             </div>
             <div
-              className={`relative focus-within:ring-2 focus-within:ring-offset-2 ${
-                darkMode ? "focus-within:ring-blue-500" : "focus-within:ring-blue-600"
-              } rounded-md`}
+              className={`relative focus-within:ring-2 focus-within:ring-offset-2 ${darkMode ? "focus-within:ring-blue-500" : "focus-within:ring-blue-600"
+                } rounded-md`}
             >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
@@ -236,18 +224,16 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
                 onChange={handleChange}
                 onFocus={handlePasswordFocus}
                 onBlur={handleBlur}
-                className={`w-full pl-10 pr-10 py-2 sm:py-2.5 text-sm border rounded-md transition duration-200 ${
-                  darkMode
+                className={`w-full pl-10 pr-10 py-2 sm:py-2.5 text-sm border rounded-md transition duration-200 ${darkMode
                     ? "bg-gray-700/70 border-gray-600 text-white placeholder-gray-400 outline-none focus:border-blue-500"
                     : "bg-white/90 border-gray-300 text-gray-900 placeholder-gray-500 outline-none focus:border-blue-500"
-                }`}
+                  }`}
                 placeholder="Masukkan password"
               />
               <button
                 type="button"
-                className={`absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center ${
-                  darkMode ? "text-gray-300 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
-                }`}
+                className={`absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center ${darkMode ? "text-gray-300 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"
+                  }`}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -292,17 +278,14 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
           </div>
           <button
             type="submit"
-            className={`w-full cursor-pointer py-2 sm:py-2.5 px-4 rounded-md text-sm font-medium transition duration-300 shadow-md ${
-              loading
-                ? `${
-                    darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-400 text-white"
-                  } cursor-not-allowed`
-                : `${
-                    darkMode
-                      ? "bg-blue-600 hover:bg-blue-700 text-white"
-                      : "bg-blue-600 hover:bg-blue-700 text-white"
-                  }`
-            }`}
+            className={`w-full cursor-pointer py-2 sm:py-2.5 px-4 rounded-md text-sm font-medium transition duration-300 shadow-md ${loading
+                ? `${darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-400 text-white"
+                } cursor-not-allowed`
+                : `${darkMode
+                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`
+              }`}
             disabled={loading}
           >
             {loading ? (
@@ -356,9 +339,8 @@ const Login = ({ darkMode, setIsLoggedIn, setUsername }) => {
             Belum punya akun?{" "}
             <Link
               to="/register"
-              className={`font-medium ${
-                darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-500"
-              }`}
+              className={`font-medium ${darkMode ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-500"
+                }`}
             >
               Daftar sekarang
             </Link>

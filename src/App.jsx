@@ -7,7 +7,7 @@ import Sidebar from "./components/Sidebar";
 import Income from "./pages/Income";
 import Expense from "./pages/Expense";
 import Setting from "./pages/Setting";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,37 +15,22 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastActivity, setLastActivity] = useState(Date.now());
-
-  const SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
 
   useEffect(() => {
     // Check for token instead of isLogin flag
     const token = localStorage.getItem("token");
     const userDataString = localStorage.getItem("user");
     const isDarkMode = localStorage.getItem("isDarkMode") === "true";
-    const storedLastActivity = localStorage.getItem("lastActivity");
 
     if (token && userDataString) {
       try {
         const userData = JSON.parse(userDataString);
-
-        // Check if session has expired
-        if (storedLastActivity && Date.now() - parseInt(storedLastActivity) > SESSION_TIMEOUT) {
-          // Session expired, force logout
-          handleLogout("Sesi Anda telah berakhir. Silakan login kembali.");
-        } else {
-          setIsLoggedIn(true);
-          setUsername(userData.full_name || userData.email);
-          setLastActivity(storedLastActivity ? parseInt(storedLastActivity) : Date.now());
-          // Update last activity time
-          localStorage.setItem("lastActivity", Date.now().toString());
-        }
+        setIsLoggedIn(true);
+        setUsername(userData.full_name || userData.email);
       } catch (error) {
         // If JSON parsing fails, clear invalid data
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        localStorage.removeItem("lastActivity");
         setIsLoggedIn(false);
       }
     } else {
@@ -55,56 +40,6 @@ function App() {
     setDarkMode(isDarkMode);
     setIsLoading(false);
   }, []);
-
-  // Setup event listeners to track user activity
-  useEffect(() => {
-    if (!isLoggedIn) return;
-
-    const updateLastActivity = () => {
-      const currentTime = Date.now();
-      setLastActivity(currentTime);
-      localStorage.setItem("lastActivity", currentTime.toString());
-    };
-
-    // List of events to track user activity
-    const events = [
-      "mousedown",
-      "mousemove",
-      "keypress",
-      "scroll",
-      "touchstart",
-      "click",
-      "keydown"
-    ];
-
-    // Add event listeners
-    events.forEach(event => {
-      window.addEventListener(event, updateLastActivity);
-    });
-
-    // Cleanup function
-    return () => {
-      events.forEach(event => {
-        window.removeEventListener(event, updateLastActivity);
-      });
-    };
-  }, [isLoggedIn]);
-
-  // Check for inactivity
-  useEffect(() => {
-    if (!isLoggedIn) return;
-
-    const checkInactivity = setInterval(() => {
-      const currentTime = Date.now();
-      const inactiveTime = currentTime - lastActivity;
-
-      if (inactiveTime > SESSION_TIMEOUT) {
-        handleLogout("Sesi Anda telah berakhir karena tidak ada aktivitas. Silakan login kembali.");
-      }
-    }, 60000); // Check every minute
-
-    return () => clearInterval(checkInactivity);
-  }, [isLoggedIn, lastActivity]);
 
   // Update document body class when dark mode changes
   useEffect(() => {
@@ -121,25 +56,12 @@ function App() {
     localStorage.setItem("isDarkMode", newDarkMode.toString());
   };
 
-  const handleLogout = (message) => {
+  const handleLogout = () => {
     // Clear authentication data
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("lastActivity");
     setIsLoggedIn(false);
     setUsername("");
-
-    // Show message if provided
-    if (message) {
-      toast.info(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-    }
   };
 
   const ProtectedRoute = ({ element }) => {
